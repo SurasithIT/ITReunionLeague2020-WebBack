@@ -17,7 +17,6 @@ const MatchModal = () => {
         <div
           className="modal fade"
           id="staticBackdrop"
-          data-backdrop="static"
           tabIndex={-1}
           role="dialog"
           aria-labelledby="staticBackdropLabel"
