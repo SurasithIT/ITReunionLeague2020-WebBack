@@ -9,7 +9,7 @@ import $ from "jquery";
 
 function App() {
   return (
-    <div>
+    <div className="wrapper">
       <Header />
       <Router>
         <Sidebar />

@@ -37,17 +37,17 @@ const MatchModal = () => {
                   <span aria-hidden="true">×</span>
                 </button>
               </div>
-              <div className="modal-body">...</div>
+              <div className="modal-body">Content</div>
               <div className="modal-footer">
+                <button type="button" className="btn btn-primary">
+                  Save
+                </button>
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-danger"
                   data-dismiss="modal"
                 >
-                  Close
-                </button>
-                <button type="button" className="btn btn-primary">
-                  Understood
+                  Cancel
                 </button>
               </div>
             </div>
