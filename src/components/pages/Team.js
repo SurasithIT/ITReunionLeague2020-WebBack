@@ -1,78 +1,128 @@
 import React from "react";
+import TeamModal from "../modals/TeamModal";
+
+class TeamData {
+  constructor(id, generation) {
+    this.id = id;
+    this.generation = generation;
+    this.played = 0;
+    this.won = 0;
+    this.drawn = 0;
+    this.lost = 0;
+    this.goalFor = 0;
+    this.goalAgainst = 0;
+    this.goalDifferent = 0;
+    this.points = 0;
+  }
+}
+
+let teams = [];
+for (let i = 1; i <= 9; i++) {
+  teams.push(
+    new TeamData(
+      i,
+      `${Math.floor(Math.random() * 18)} , ${Math.floor(Math.random() * 18)}`
+    )
+  );
+}
+
+let addTeam = () => {
+  console.log("addTeam");
+  teams.push(
+    new TeamData(
+      (Math.floor(Math.random() * 18),
+      `${Math.floor(Math.random() * 18)} , ${Math.floor(Math.random() * 18)}`)
+    )
+  );
+  console.log(teams);
+};
 
 const Team = () => {
   return (
     <div>
-      <div class="content-header">
-        <div class="container">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-bold ">
-                <i class="fas fa-table paddingtext-icon pr-1"></i>Team
+      <TeamModal></TeamModal>
+      <div className="content-header">
+        <div className="container-fluid">
+          <div className="row mb-2">
+            <div className="col-sm-6">
+              <h1 className="m-0 text-bold ">
+                <i className="fas fa-users paddingtext-icon pr-1"></i>Team
               </h1>
             </div>
           </div>
         </div>
       </div>
       <div className="content">
-        <div className="container">
+        <div className="container-fluid">
           <div className="row">
             <div className="col-12">
               <div className="card card-outline card-dark shadow">
                 <div className="card-header table-shadow">
-                  <div className="col-sm">Match Content Header</div>
+                  <div className="row">
+                    <div className="col-sm-9">
+                      <span className="text-header">Team Management</span>
+                    </div>
+                    <div className="col-sm-3 padding-top-btn">
+                      <button
+                        className="btn btn-block btn-primary float-sm-right"
+                        onClick={addTeam}
+                      >
+                        <i className="fas fa-plus"></i> Add Team
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <div className="card-body p-0 ">
-                  <div class="table-responsive mat-elevation-z2">
+                  <div className="table-responsive mat-elevation-z2">
                     <table className="table table-hover table-striped text-center table-fixed table-shadow">
                       <thead className="thead-dark">
                         <tr>
-                          <th width="5%">Stadium</th>
-                          <th width="25%">Home</th>
-                          <th width="10%"></th>
-                          <th width="5%"></th>
-                          <th width="10%"></th>
-                          <th width="25%">Away</th>
+                          <th width="5%">Team</th>
+                          <th width="20%">Generation</th>
+                          <th width="5%">Played</th>
+                          <th width="5%">Won</th>
+                          <th width="5%">Drawn</th>
+                          <th width="5%">Lost</th>
+                          <th width="5%">GF</th>
+                          <th width="5%">GA</th>
+                          <th width="5%">GD</th>
+                          <th width="10%">Points</th>
                           <th width="20%"></th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <th>1</th>
-                          <td>Team 1</td>
-                          <td>0</td>
-                          <td>-</td>
-                          <td>0</td>
-                          <td>Team 2</td>
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              data-toggle="modal"
-                              data-target="#staticBackdrop"
-                            >
-                              Edit
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>2</th>
-                          <td>Team 1</td>
-                          <td>0</td>
-                          <td>-</td>
-                          <td>0</td>
-                          <td>Team 2</td>
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              data-toggle="modal"
-                              data-target="#staticBackdrop"
-                            >
-                              Edit
-                            </button>
-                          </td>
-                        </tr>
+                        {teams.map((val) => {
+                          return (
+                            <tr key={val.id}>
+                              <td>{val.id}</td>
+                              <td>{val.generation}</td>
+                              <td>{val.played}</td>
+                              <td>{val.won}</td>
+                              <td>{val.drawn}</td>
+                              <td>{val.lost}</td>
+                              <td>{val.goalFor}</td>
+                              <td>{val.goalAgainst}</td>
+                              <td>{val.goalDifferent}</td>
+                              <td>{val.points}</td>
+                              <td>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  data-toggle="modal"
+                                  data-target="#staticBackdrop"
+                                >
+                                  Edit
+                                </button>{" "}
+                                <button
+                                  type="button"
+                                  className="btn btn-danger"
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
