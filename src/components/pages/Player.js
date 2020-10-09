@@ -1,61 +1,82 @@
-import React from "react";
+import React, {Component} from "react";
 import PlayerModal from "../modals/PlayerModal";
+import axios from 'axios'
 
-class PlayerData {
-  constructor(
-    id,
-    firstNameTh,
-    lastNameTh,
-    firstNameEn,
-    lastNameEn,
-    generation,
-    number
-  ) {
-    this.id = id;
-    this.firstNameTh = firstNameTh;
-    this.lastNameTh = lastNameTh;
-    this.firstNameEn = firstNameEn;
-    this.lastNameEn = lastNameEn;
-    this.generation = generation;
-    this.number = number;
-    this.scores = 0;
+
+
+const RenderPlayer = props =>{
+  return props.player.map(dataplayer => {
+    return(
+    <tr>
+    <td>{dataplayer.FirstNameTh}</td>
+    <td>{dataplayer.LastNameTh}</td>
+    <td>{dataplayer.FirstNameEn}</td>
+    <td>{dataplayer.LastNameEn}</td>
+    <td>{dataplayer.Generation}</td>
+    <td>{dataplayer.Number}</td>
+    <td>0</td>
+    <td>
+      <button
+        type="button"
+        className="btn btn-primary"
+        data-toggle="modal"
+        data-target="#staticBackdrop"
+      >
+        Edit
+      </button>{" "}
+      <button
+        type="button"
+        className="btn btn-danger"
+      >
+        Delete
+      </button>
+    </td>
+  </tr>
+  )
+  })
+}
+  
+
+
+class PlayerData extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      playersData : []
+    }
+
   }
-}
 
-let players = [];
-for (let i = 1; i <= 100; i++) {
-  players.push(
-    new PlayerData(
-      i,
-      "ทดสอบ",
-      "ทดสอบ",
-      "test",
-      "test",
-      Math.floor(Math.random() * 18),
-      Math.floor(Math.random() * 22)
-    )
-  );
-}
+  componentDidMount() {
+    const PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
+    const URL = 'https://itreuionapi.herokuapp.com/player/team/16';
+    axios({
+      method: 'get',
+      url: PROXY_URL+URL,
+      data:{
+        "KEY":"VALUE"
+      }
+    })
+    .then(res => {
+      this.setState({
+        playersData: [...this.state.playersData, res.data]
+      })
+      // console.log(res.data)
+      // console.log(this.state.playersData)
+    })
+    .catch(err => console.log(err))
+  }
 
-let addPlayer = () => {
-  console.log("addPlayer");
-  players.push(
-    new PlayerData(
-      Math.floor(Math.random() * 100),
-      "ทดสอบ",
-      "ทดสอบ",
-      "test",
-      "test",
-      Math.floor(Math.random() * 18),
-      Math.floor(Math.random() * 22)
-    )
-  );
-  console.log(players);
-};
+  playerlist(){
+    return this.state.playersData.map(renderplayer => {
+      return <RenderPlayer player={renderplayer} key={renderplayer._id} />
+    })
+  }
 
-const Player = () => {
-  return (
-    <div>
+
+  render(){
+    return(
+         <div>
       <PlayerModal></PlayerModal>
       <div className="content-header">
         <div className="container-fluid">
@@ -81,7 +102,7 @@ const Player = () => {
                     <div className="col-sm-3 padding-top-btn">
                       <button
                         className="btn btn-block btn-primary float-sm-right"
-                        onClick={addPlayer}
+                        // onClick={}
                       >
                         <i className="fas fa-plus"></i> Add Player
                       </button>
@@ -104,35 +125,8 @@ const Player = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {players.map((val) => {
-                          return (
-                            <tr key={val.id}>
-                              <td>{val.firstNameTh}</td>
-                              <td>{val.lastNameTh}</td>
-                              <td>{val.firstNameEn}</td>
-                              <td>{val.lastNameEn}</td>
-                              <td>{val.generation}</td>
-                              <td>{val.number}</td>
-                              <td>{val.scores}</td>
-                              <td>
-                                <button
-                                  type="button"
-                                  className="btn btn-primary"
-                                  data-toggle="modal"
-                                  data-target="#staticBackdrop"
-                                >
-                                  Edit
-                                </button>{" "}
-                                <button
-                                  type="button"
-                                  className="btn btn-danger"
-                                >
-                                  Delete
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                        {this.playerlist()}
+                       
                       </tbody>
                     </table>
                   </div>
@@ -143,7 +137,8 @@ const Player = () => {
         </div>
       </div>
     </div>
-  );
+    )
+  }
 };
+export default PlayerData;
 
-export default Player;
