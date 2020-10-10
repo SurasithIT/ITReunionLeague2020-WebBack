@@ -26,21 +26,17 @@ for (let i = 1; i <= 9; i++) {
   );
 }
 
-let addTeam = () => {
-  console.log("addTeam");
-  teams.push(
-    new TeamData(
-      (Math.floor(Math.random() * 18),
-      `${Math.floor(Math.random() * 18)} , ${Math.floor(Math.random() * 18)}`)
-    )
-  );
-  console.log(teams);
-};
+let teamId = -1;
+const changeId =(id)=>{
+  teamId = id
+  console.log(teamId)
+}
 
 const Team = () => {
+
   return (
     <div>
-      <TeamModal></TeamModal>
+      <TeamModal id={teamId}></TeamModal>
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -64,8 +60,10 @@ const Team = () => {
                     </div>
                     <div className="col-sm-3 padding-top-btn">
                       <button
+                        type="button"
                         className="btn btn-block btn-primary float-sm-right"
-                        onClick={addTeam}
+                        data-toggle="modal"
+                        data-target="#teamModal"
                       >
                         <i className="fas fa-plus"></i> Add Team
                       </button>
@@ -109,7 +107,8 @@ const Team = () => {
                                   type="button"
                                   className="btn btn-primary"
                                   data-toggle="modal"
-                                  data-target="#staticBackdrop"
+                                  data-target="#teamModal"
+                                  onClick={changeId(val.id)}
                                 >
                                   Edit
                                 </button>{" "}
