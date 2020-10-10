@@ -5,15 +5,15 @@ import axios from 'axios'
 
 
 const RenderPlayer = props =>{
-  return props.player.map(dataplayer => {
-    return(
-    <tr>
-    <td>{dataplayer.FirstNameTh}</td>
-    <td>{dataplayer.LastNameTh}</td>
-    <td>{dataplayer.FirstNameEn}</td>
-    <td>{dataplayer.LastNameEn}</td>
-    <td>{dataplayer.Generation}</td>
-    <td>{dataplayer.Number}</td>
+  console.log(props)
+  return (
+      <tr>
+    <td>{props.renderplayer.FirstNameTh}</td>
+    <td>{props.renderplayer.LastNameTh}</td>
+    <td>{props.renderplayer.FirstNameEn}</td>
+    <td>{props.renderplayer.LastNameEn}</td>
+    <td>{props.renderplayer.Generation}</td>
+    <td>{props.renderplayer.Number}</td>
     <td>0</td>
     <td>
       <button
@@ -33,9 +33,9 @@ const RenderPlayer = props =>{
     </td>
   </tr>
   )
-  })
 }
-  
+
+
 
 
 class PlayerData extends Component{
@@ -59,17 +59,16 @@ class PlayerData extends Component{
     })
     .then(res => {
       this.setState({
-        playersData: [...this.state.playersData, res.data]
+        playersData: res.data.teams
       })
-      // console.log(res.data)
-      // console.log(this.state.playersData)
     })
     .catch(err => console.log(err))
   }
 
   playerlist(){
-    return this.state.playersData.map(renderplayer => {
-      return <RenderPlayer player={renderplayer} key={renderplayer._id} />
+    console.log(this.state.playersData)
+    return this.state.playersData.map( renderplayer => {
+      return <RenderPlayer  renderplayer={renderplayer} key={renderplayer.id}/>
     })
   }
 
