@@ -1,82 +1,68 @@
-import React, {Component} from "react";
+import React, { useState, useEffect } from "react";
 import PlayerModal from "../modals/PlayerModal";
-import axios from 'axios'
+import axios from "axios";
 
+const Player = () => {
+  const [playersData, setPlayersData] = useState([]);
+  const [id, setId] = useState(-1);
+  const [player, setPlayer] = useState({});
 
-
-const RenderPlayer = props =>{
-  console.log(props)
-  return (
-      <tr>
-    <td>{props.renderplayer.FirstNameTh}</td>
-    <td>{props.renderplayer.LastNameTh}</td>
-    <td>{props.renderplayer.FirstNameEn}</td>
-    <td>{props.renderplayer.LastNameEn}</td>
-    <td>{props.renderplayer.Generation}</td>
-    <td>{props.renderplayer.Number}</td>
-    <td>0</td>
-    <td>
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-toggle="modal"
-        data-target="#staticBackdrop"
-      >
-        Edit
-      </button>{" "}
-      <button
-        type="button"
-        className="btn btn-danger"
-      >
-        Delete
-      </button>
-    </td>
-  </tr>
-  )
-}
-
-
-
-
-class PlayerData extends Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      playersData : []
-    }
-
-  }
-
-  componentDidMount() {
-    const PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
-    const URL = 'https://itreuionapi.herokuapp.com/player/team/16';
+  useEffect(() => {
+    const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+    const URL = "https://itreuionapi.herokuapp.com/player/team/16";
     axios({
-      method: 'get',
-      url: PROXY_URL+URL,
-      data:{
-        "KEY":"VALUE"
-      }
+      method: "get",
+      url: PROXY_URL + URL,
+      data: {
+        KEY: "VALUE",
+      },
     })
-    .then(res => {
-      this.setState({
-        playersData: res.data.teams
+      .then((res) => {
+        setPlayersData(res.data.teams);
       })
-    })
-    .catch(err => console.log(err))
-  }
+      .catch((err) => console.log(err));
+  }, []);
 
-  playerlist(){
-    console.log(this.state.playersData)
-    return this.state.playersData.map( renderplayer => {
-      return <RenderPlayer  renderplayer={renderplayer} key={renderplayer.id}/>
-    })
-  }
+  const RenderPlayer = (props) => {
+    return (
+      <tr>
+        <td>{props.renderplayer.FirstNameTh}</td>
+        <td>{props.renderplayer.LastNameTh}</td>
+        <td>{props.renderplayer.FirstNameEn}</td>
+        <td>{props.renderplayer.LastNameEn}</td>
+        <td>{props.renderplayer.Generation}</td>
+        <td>{props.renderplayer.Number}</td>
+        <td>0</td>
+        <td>
+          <button
+            type="button"
+            className="btn btn-primary"
+            data-toggle="modal"
+            data-target="#playerModal"
+            onClick={() => {
+              setId(props.renderplayer.id);
+              setPlayer(props.renderplayer);
+            }}
+          >
+            Edit
+          </button>{" "}
+          <button type="button" className="btn btn-danger">
+            Delete
+          </button>
+        </td>
+      </tr>
+    );
+  };
 
+  const playerlist = () => {
+    return playersData.map((renderplayer) => {
+      return <RenderPlayer renderplayer={renderplayer} key={renderplayer.id} />;
+    });
+  };
 
-  render(){
-    return(
-         <div>
-      <PlayerModal></PlayerModal>
+  return (
+    <div>
+      <PlayerModal id={id} data={player}></PlayerModal>
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -100,8 +86,13 @@ class PlayerData extends Component{
                     </div>
                     <div className="col-sm-3 padding-top-btn">
                       <button
+                        type="button"
                         className="btn btn-block btn-primary float-sm-right"
-                        // onClick={}
+                        data-toggle="modal"
+                        data-target="#playerModal"
+                        onClick={() => {
+                          setId(-1);
+                        }}
                       >
                         <i className="fas fa-plus"></i> Add Player
                       </button>
@@ -123,10 +114,7 @@ class PlayerData extends Component{
                           <th width="25%"></th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {this.playerlist()}
-                       
-                      </tbody>
+                      <tbody>{playerlist()}</tbody>
                     </table>
                   </div>
                 </div>
@@ -136,8 +124,6 @@ class PlayerData extends Component{
         </div>
       </div>
     </div>
-    )
-  }
+  );
 };
-export default PlayerData;
-
+export default Player;
