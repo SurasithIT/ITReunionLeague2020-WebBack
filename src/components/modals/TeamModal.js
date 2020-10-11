@@ -14,6 +14,7 @@ const TeamModal = (props) => {
   const [goalDiff, setGoalDiff] = useState(0);
 
   useEffect(() => {
+    console.log(props);
     if (id !== props.id) {
       if (props.id === -1) {
         setTitle("Add");
@@ -29,19 +30,19 @@ const TeamModal = (props) => {
       } else {
         // fetch and then
         setTitle("Edit");
-        setGeneration("12, 13");
-        setPlayed(5);
-        setWon(2);
-        setDrawn(2);
-        setLost(1);
-        setPoints(8);
-        setGoalFor(10);
-        setGoalAgainst(5);
-        setGoalDiff(5);
+        setGeneration(props.data.generation);
+        setPlayed(props.data.played);
+        setWon(props.data.won);
+        setDrawn(props.data.drawn);
+        setLost(props.data.lost);
+        setPoints(props.data.points);
+        setGoalFor(props.data.goalFor);
+        setGoalAgainst(props.data.goalAgainst);
+        setGoalDiff(props.data.goalDifferent);
       }
       setId(props.id);
     }
-  }, [id, props.id]);
+  }, [id, props]);
 
   useEffect(() => {
     setGoalDiff(goalFor - goalAgainst);

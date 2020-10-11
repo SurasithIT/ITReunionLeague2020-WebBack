@@ -31,7 +31,7 @@ const Team = () => {
 
   return (
     <div>
-      <TeamModal id={id}></TeamModal>
+      <TeamModal id={id} data={teams.filter((x) => x.id === id)[0]}></TeamModal>
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
