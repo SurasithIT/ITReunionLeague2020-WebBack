@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MatchModal from "../modals/MatchModal";
 
 class MatchData {
@@ -29,26 +29,16 @@ for (let i = 1; i <= 36; i++) {
   );
 }
 console.log(matches);
-let addMatch = () => {
-  console.log("addTeam");
-  matches.push(
-    new MatchData(
-      Math.floor(Math.random() * 2),
-      Math.floor(Math.random() * 2),
-      `${new Date().getHours()}:${new Date().getMinutes()}`,
-      Math.floor(Math.random() * 2),
-      Math.floor(Math.random() * 9),
-      Math.floor(Math.random() * 9),
-      Math.floor(Math.random() * 9)
-    )
-  );
-  console.log(matches);
-};
 
 const Match = () => {
+  const [id, setId] = useState(-1);
+
   return (
     <div>
-      <MatchModal></MatchModal>
+      <MatchModal
+        id={id}
+        data={matches.filter((x) => x.id === id)[0]}
+      ></MatchModal>
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -72,8 +62,13 @@ const Match = () => {
                     </div>
                     <div className="col-sm-3 padding-top-btn">
                       <button
+                        type="button"
                         className="btn btn-block btn-primary float-sm-right"
-                        onClick={addMatch}
+                        data-toggle="modal"
+                        data-target="#matchModal"
+                        onClick={() => {
+                          setId(-1);
+                        }}
                       >
                         <i className="fas fa-plus"></i> Add Match
                       </button>
@@ -111,9 +106,12 @@ const Match = () => {
                               <td>
                                 <button
                                   type="button"
-                                  className="btn btn-primary"
+                                  className="btn btn-primary "
                                   data-toggle="modal"
-                                  data-target="#staticBackdrop"
+                                  data-target="#matchModal"
+                                  onClick={() => {
+                                    setId(val.id);
+                                  }}
                                 >
                                   Edit
                                 </button>{" "}
