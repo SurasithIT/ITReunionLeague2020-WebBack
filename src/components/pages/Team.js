@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TeamModal from "../modals/TeamModal";
 
 class TeamData {
@@ -26,17 +26,12 @@ for (let i = 1; i <= 9; i++) {
   );
 }
 
-let teamId = -1;
-const changeId =(id)=>{
-  teamId = id
-  console.log(teamId)
-}
-
 const Team = () => {
+  const [id, setId] = useState(-1);
 
   return (
     <div>
-      <TeamModal id={teamId}></TeamModal>
+      <TeamModal id={id}></TeamModal>
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -64,6 +59,9 @@ const Team = () => {
                         className="btn btn-block btn-primary float-sm-right"
                         data-toggle="modal"
                         data-target="#teamModal"
+                        onClick={() => {
+                          setId(-1);
+                        }}
                       >
                         <i className="fas fa-plus"></i> Add Team
                       </button>
@@ -108,7 +106,9 @@ const Team = () => {
                                   className="btn btn-primary"
                                   data-toggle="modal"
                                   data-target="#teamModal"
-                                  onClick={changeId(val.id)}
+                                  onClick={() => {
+                                    setId(val.id);
+                                  }}
                                 >
                                   Edit
                                 </button>{" "}

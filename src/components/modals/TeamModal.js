@@ -1,6 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const TeamModal = (props) => {
+  const [id, setId] = useState(0);
+  const [title, setTitle] = useState("");
+  const [generation, setGeneration] = useState("");
+  const [played, setPlayed] = useState(0);
+  const [won, setWon] = useState(0);
+  const [drawn, setDrawn] = useState(0);
+  const [lost, setLost] = useState(0);
+  const [points, setPoints] = useState(0);
+  const [goalFor, setGoalFor] = useState(0);
+  const [goalAgainst, setGoalAgainst] = useState(0);
+  const [goalDiff, setGoalDiff] = useState(0);
+
+  useEffect(() => {
+    if (id !== props.id) {
+      if (props.id === -1) {
+        setTitle("Add");
+        setGeneration("");
+        setPlayed(0);
+        setWon(0);
+        setDrawn(0);
+        setLost(0);
+        setPoints(0);
+        setGoalFor(0);
+        setGoalAgainst(0);
+        setGoalDiff(0);
+      } else {
+        // fetch and then
+        setTitle("Edit");
+        setGeneration("12, 13");
+        setPlayed(5);
+        setWon(2);
+        setDrawn(2);
+        setLost(1);
+        setPoints(8);
+        setGoalFor(10);
+        setGoalAgainst(5);
+        setGoalDiff(5);
+      }
+      setId(props.id);
+    }
+  }, [id, props.id]);
+
+  useEffect(() => {
+    setGoalDiff(goalFor - goalAgainst);
+    setPoints(+won * 3 + +drawn);
+    setPlayed(+won + +drawn + +lost);
+  }, [won, drawn, lost, goalFor, goalAgainst]);
+
   return (
     <div>
       <div>
@@ -13,11 +61,10 @@ const TeamModal = (props) => {
           aria-hidden="true"
         >
           <div className="modal-dialog modal-lg" role="document">
-            
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="staticBackdropLabel">
-                  {props.id !== -1 ? "Edit" : "Add"} Team
+                <h5 className="modal-title" id="teamModalLabel">
+                  {title} Team
                 </h5>
                 <button
                   type="button"
@@ -28,58 +75,140 @@ const TeamModal = (props) => {
                   <span aria-hidden="true">×</span>
                 </button>
               </div>
-                <div className="modal-body">
-                  <div className="form-group">
-
+              <div className="modal-body">
+                <div className="form-group">
                   <div className="row">
-                      <div className="col-6">
-                      <label for="sel1">Generation :</label>
-                        <select class="form-control" id="sel1">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                        </select>
-                      </div>
+                    <div className="col-4">
+                      <label htmlFor="generation">Generation :</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="generation"
+                        required
+                        value={generation}
+                        onChange={(event) => {
+                          setGeneration(event.target.value);
+                        }}
+                      ></input>
+                      {/* <select className="form-control" id="sel1">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                      </select> */}
+                    </div>
 
-                      <div className="col-6">
-                        <label for="usr">Played :</label>
-                        <input type="number" class="form-control" id="usr" required />
-                      </div>
+                    <div className="col-4">
+                      <label htmlFor="played">Played :</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="played"
+                        required
+                        readOnly
+                        value={played}
+                        onChange={(event) => {
+                          setPlayed(event.target.value);
+                        }}
+                      />
+                    </div>
 
-                      <div className="col-4">
-                        <label for="usr">Won :</label>
-                        <input type="number" class="form-control" id="usr" required/>
-                      </div>
+                    <div className="col-4">
+                      <label htmlFor="points">Points :</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="points"
+                        required
+                        readOnly
+                        value={points}
+                      />
+                    </div>
 
-                      <div className="col-4">
-                        <label for="usr">Drawn :</label>
-                        <input type="number" class="form-control" id="usr" required/>
-                      </div>
+                    <div className="col-4">
+                      <label htmlFor="won">Won :</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="won"
+                        required
+                        value={won}
+                        onChange={(event) => {
+                          setWon(event.target.value);
+                        }}
+                      />
+                    </div>
 
-                      <div className="col-4">
-                        <label for="usr">Lost :</label>
-                        <input type="number" class="form-control" id="usr" required/>
-                      </div>
+                    <div className="col-4">
+                      <label htmlFor="drawn">Drawn :</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="drawn"
+                        required
+                        value={drawn}
+                        onChange={(event) => {
+                          setDrawn(event.target.value);
+                        }}
+                      />
+                    </div>
 
-                      <div className="col-4">
-                        <label for="usr">Goal for :</label>
-                        <input type="number" class="form-control" id="usr" required/>
-                      </div>
+                    <div className="col-4">
+                      <label htmlFor="lost">Lost :</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="lost"
+                        required
+                        value={lost}
+                        onChange={(event) => {
+                          setLost(event.target.value);
+                        }}
+                      />
+                    </div>
 
-                      <div className="col-4">
-                        <label for="usr">Goal against :</label>
-                        <input type="number" class="form-control" id="usr" required/>
-                      </div>
+                    <div className="col-4">
+                      <label htmlFor="goalFor">Goal for :</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="goalFor"
+                        required
+                        value={goalFor}
+                        onChange={(event) => {
+                          setGoalFor(event.target.value);
+                        }}
+                      />
+                    </div>
 
-                      <div className="col-4">
-                        <label for="usr">Goal different :</label>
-                        <input type="number" class="form-control" id="usr" required readOnly/>
-                      </div>
+                    <div className="col-4">
+                      <label htmlFor="goalAgainst">Goal against :</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="goalAgainst"
+                        required
+                        value={goalAgainst}
+                        onChange={(event) => {
+                          setGoalAgainst(event.target.value);
+                        }}
+                      />
+                    </div>
+
+                    <div className="col-4">
+                      <label htmlFor="goalDifferent">Goal different :</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="goalDifferent"
+                        required
+                        readOnly
+                        value={goalDiff}
+                      />
+                    </div>
                   </div>
-                  </div>
-
                 </div>
+              </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-primary">
                   Save
