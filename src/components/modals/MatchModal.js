@@ -16,6 +16,11 @@ const MatchModal = (props) => {
   const [homeScores, setHomeScores] = useState(0);
   const [awayScores, setAwayScores] = useState(0);
   const [refereeTeam, setRefereeTeam] = useState(0);
+  const [stadiumList, setStadiumList] = useState([
+    { id: 0, value: 0 },
+    { id: 1, value: 1 },
+    { id: 2, value: 2 },
+  ]);
 
   useEffect(() => {
     console.log(props);
@@ -96,7 +101,7 @@ const MatchModal = (props) => {
 
                       <div className="col-3">
                         <label htmlFor="stadiumNumber">Stadium :</label>
-                        <input
+                        <select
                           type="number"
                           className="form-control"
                           id="stadiumNumber"
@@ -105,7 +110,15 @@ const MatchModal = (props) => {
                           onChange={(event) => {
                             setStadiumNumber(event.target.value);
                           }}
-                        />
+                        >
+                          {stadiumList.map((val) => {
+                            return (
+                              <option key={val.id} value={val.id}>
+                                {val.value}
+                              </option>
+                            );
+                          })}
+                        </select>
                       </div>
 
                       <div className="col-6">
