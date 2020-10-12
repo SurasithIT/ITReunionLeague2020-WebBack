@@ -20,7 +20,11 @@ for (let i = 1; i <= 36; i++) {
     new MatchData(
       i,
       Math.floor(Math.random() * 2),
-      `${new Date().getHours()}:${new Date().getMinutes()}`,
+      new Date().toLocaleTimeString("th-TH", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       Math.floor(Math.random() * 2),
       Math.floor(Math.random() * 9),
       Math.floor(Math.random() * 9),

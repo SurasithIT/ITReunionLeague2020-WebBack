@@ -4,7 +4,11 @@ const MatchModal = (props) => {
   const [id, setId] = useState(0);
   const [title, setTitle] = useState("");
   const [kickOffTime, setKickOffTime] = useState(
-    `${new Date().getHours()}:${new Date().getMinutes()}`
+    new Date().toLocaleTimeString("th-TH", {
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+    })
   );
   const [stadiumNumber, setStadiumNumber] = useState(0);
   const [homeTeam, setHomeTeam] = useState(0);
@@ -18,7 +22,13 @@ const MatchModal = (props) => {
     if (id !== props.id) {
       if (props.id === -1) {
         setTitle("Add");
-        setKickOffTime(`${new Date().getHours()}:${new Date().getMinutes()}`);
+        setKickOffTime(
+          new Date().toLocaleTimeString("th-TH", {
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        );
         setStadiumNumber(1);
         setHomeTeam(0);
         setAwayTeam(0);
@@ -72,7 +82,7 @@ const MatchModal = (props) => {
                       <div className="col-3">
                         <label htmlFor="kickOffTime">Kick off :</label>
                         <input
-                          type="text"
+                          type="time"
                           className="form-control"
                           id="kickOffTime"
                           required
