@@ -1,27 +1,37 @@
-import React, { Component } from "react";
+import React from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Footer from "./components/Footer";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
 import Content from "./components/Content";
 import $ from "jquery";
+import Login from "./components/pages/Login";
 
-class App extends Component {
-  render() {
+const App = () => {
+  let auth = false;
+  if (auth === false) {
     return (
-      <div className="wrapper">
-        <Header />
-        <Router>
+      <Router>
+        <Route path="/Login" component={Login} />
+        <Redirect to="/Login" />
+      </Router>
+    );
+  } else {
+    return (
+      <Router>
+        <Redirect to="/Admin" />
+        <div className="wrapper">
+          <Header />
           <Sidebar />
           <Content />
-        </Router>
-        <Footer />
-        <div id="sidebar-overlay" onClick={click}></div>
-      </div>
+          <Footer />
+          <div id="sidebar-overlay" onClick={click}></div>
+        </div>
+      </Router>
     );
   }
-}
+};
 
 let click = () => {
   $("#body")
