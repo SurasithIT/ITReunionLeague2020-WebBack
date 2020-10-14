@@ -9,9 +9,8 @@ import $ from "jquery";
 import Login from "./components/pages/Login";
 
 const App = () => {
-
-  if (localStorage.getItem('token') === null) {
-    console.log('null')
+  if (localStorage.getItem("token") === null) {
+    console.log("null");
     return (
       <Router>
         <Route path="/Login" component={Login} />
@@ -19,10 +18,10 @@ const App = () => {
       </Router>
     );
   } else {
-    console.log('pass')
+    console.log("pass");
     return (
       <Router>
-        <Redirect to="/Admin" />
+        <Redirect to="/" />
         <div className="wrapper">
           <Header />
           <Sidebar />

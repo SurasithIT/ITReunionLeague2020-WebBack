@@ -1,101 +1,101 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import TeamModal from "../modals/TeamModal";
 import axios from "axios";
 
-
-
-
-
-
-const  TeamData = () => {
-  
-
-  const [DataTeam, setDataTeam] = useState([])
+const TeamData = () => {
+  const [DataTeam, setDataTeam] = useState([]);
   const [id, setId] = useState(-1);
-  const [team, setTeam] = useState({})
-  const fetchTeam = async () => {
-    const apiCall = await fetch('https://itreuionapi.herokuapp.com/team/all')
-    const datateam = await apiCall.json()
-    setDataTeam(datateam.teams)
-    // console.log(datateam.teams)
-  }
+  const [team, setTeam] = useState({});
+
+  const fetchTeam = () => {
+    const URL = "https://itreuionapi.herokuapp.com/team/all";
+    axios({
+      method: "get",
+      url: URL,
+      data: {
+        KEY: "VALUE",
+      },
+    })
+      .then((res) => {
+        setDataTeam(res.data.teams);
+        console.log(res.data.teams);
+      })
+      .catch((err) => console.log(err));
+    // const apiCall = await fetch("https://itreuionapi.herokuapp.com/team/all");
+    // const datateam = await apiCall.json();
+    // setDataTeam(datateam.teams);
+    // console.log(datateam.teams);
+  };
 
   useEffect(() => {
-    fetchTeam()
-    // const URL = "https://itreuionapi.herokuapp.com/team/all";
-    // axios({
-    //   method: "get",
-    //   url: URL,
-    //   data: {
-    //     KEY: "VALUE",
-    //   },
-    // })
-    //   .then((res) => {
-    //     setDataTeam(res.data.teams);
-    //     console.log(res.data.teams)
-    //   })
-    //   .catch((err) => console.log(err));
-   }, []);
-  
+    fetchTeam();
+  }, []);
 
   const handleDelete = (idteam) => {
-    const token = localStorage.getItem('token')
-      axios.delete('https://itreuionapi.herokuapp.com/team/' + idteam, {
+    const token = localStorage.getItem("token");
+    axios
+      .delete("https://itreuionapi.herokuapp.com/team/" + idteam, {
         headers: {
-          Authorization: token}
+          Authorization: token,
+        },
       })
-      .then(res => {
-          console.log(res.status)
+      .then((res) => {
+        if (res.status === 200) {
+          fetchTeam();
+        } else {
+          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+          //Show Dialog box หรือ Modal แจ้ง Error
+        }
         // window.location.reload()
         // alert("Add Team Success");
       })
-      .catch((err) => console.log(err))
-  }
+      .catch((err) => console.log(err));
+  };
 
   const RenderTeam = (props) => {
-    return(
-        <tr>
-          <td>{props.renderteam.name}</td>
-          <td>16</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>
-            <button
-              type="button"
-              className="btn btn-primary"
-              data-toggle="modal"
-              data-target="#teamModal"
-              onClick={() => {
-                setId(props.renderteam.id);
-                setTeam(props.renderteam)
-              }}
-            >
-              Edit
-            </button>{" "}
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => {handleDelete(props.renderteam.id)}}
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
-  }
+    return (
+      <tr>
+        <td>{props.renderteam.name}</td>
+        <td>16</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>
+          <button
+            type="button"
+            className="btn btn-primary"
+            data-toggle="modal"
+            data-target="#teamModal"
+            onClick={() => {
+              setId(props.renderteam.id);
+              setTeam(props.renderteam);
+            }}
+          >
+            Edit
+          </button>{" "}
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => {
+              handleDelete(props.renderteam.id);
+            }}
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    );
+  };
   const Teamlist = () => {
-
     return DataTeam.map((renderteam) => {
-      return <RenderTeam renderteam={renderteam} key={renderteam.id}/>
-    })
-  }
-
+      return <RenderTeam renderteam={renderteam} key={renderteam.id} />;
+    });
+  };
 
   return (
     <div>
@@ -154,9 +154,7 @@ const  TeamData = () => {
                           <th width="20%"></th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {Teamlist()}
-                      </tbody>
+                      <tbody>{Teamlist()}</tbody>
                     </table>
                   </div>
                 </div>
@@ -166,8 +164,7 @@ const  TeamData = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-
-export default TeamData
+export default TeamData;
