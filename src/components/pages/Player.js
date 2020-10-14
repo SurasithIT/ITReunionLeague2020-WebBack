@@ -7,9 +7,9 @@ const Player = () => {
   const [id, setId] = useState(-1);
   const [player, setPlayer] = useState({});
 
-  useEffect(() => {
+  const fetchPlayer = () => {
     const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
-    const URL = "https://itreuionapi.herokuapp.com/player/team/16";
+    const URL = "https://itreuionapi.herokuapp.com/player";
     axios({
       method: "get",
       url: PROXY_URL + URL,
@@ -18,10 +18,37 @@ const Player = () => {
       },
     })
       .then((res) => {
-        setPlayersData(res.data.teams);
+        console.log(res.data.player)
+        setPlayersData(res.data.player);
       })
       .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    fetchPlayer()
   }, []);
+
+  const handleDelete = (idplayer) =>{
+
+    const token = localStorage.getItem("token");
+    axios
+      .delete("https://itreuionapi.herokuapp.com/player/" + idplayer, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          fetchPlayer();
+        } else {
+          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+          //Show Dialog box หรือ Modal แจ้ง Error
+        }
+      })
+      .catch((err) => console.log(err));
+
+
+  }
 
   const RenderPlayer = (props) => {
     return (
@@ -46,7 +73,7 @@ const Player = () => {
           >
             Edit
           </button>{" "}
-          <button type="button" className="btn btn-danger">
+          <button type="button" className="btn btn-danger" onClick={() => {handleDelete(props.renderplayer.id)} }>
             Delete
           </button>
         </td>

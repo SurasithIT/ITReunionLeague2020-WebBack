@@ -1,47 +1,103 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import MatchModal from "../modals/MatchModal";
 
-class MatchData {
-  constructor(id, stadiumNumber, kickOffTime, homeTeam, awayTeam, refereeTeam) {
-    this.id = id;
-    this.stadiumNumber = stadiumNumber;
-    this.kickOffTime = kickOffTime;
-    this.homeTeam = homeTeam;
-    this.homeScores = 0;
-    this.awayTeam = awayTeam;
-    this.awayScores = 0;
-    this.refereeTeam = refereeTeam;
-  }
-}
 
-let matches = [];
-for (let i = 1; i <= 36; i++) {
-  matches.push(
-    new MatchData(
-      i,
-      Math.floor(Math.random() * 2),
-      new Date().toLocaleTimeString("th-TH", {
-        hour12: false,
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      Math.floor(Math.random() * 2),
-      Math.floor(Math.random() * 9),
-      Math.floor(Math.random() * 9),
-      Math.floor(Math.random() * 9)
-    )
-  );
-}
-console.log(matches);
+const MatchData = () =>{
 
-const Match = () => {
+  const [MatchsData, setMatchsData] = useState([]);
   const [id, setId] = useState(-1);
+  const [match, setMatch] = useState({});
+  
+  const fetchMatch = () => {
+    const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+    const URL = "https://itreuionapi.herokuapp.com/match";
+    axios({
+      method: "get",
+      url: PROXY_URL + URL,
+      data: {
+        KEY: "VALUE",
+      },
+    })
+      .then((res) => {
+        setMatchsData(res.data.matchs);
+        console.log(res.data)
+      })
+      .catch((err) => console.log(err));
+  }
 
+  useEffect(() => {
+    fetchMatch()
+  }, []);
+
+  const handleDelete = (idmatch) => {
+    const token = localStorage.getItem("token");
+    axios
+      .delete("https://itreuionapi.herokuapp.com/match/" + idmatch, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          fetchMatch();
+        } else {
+          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+          //Show Dialog box หรือ Modal แจ้ง Error
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const RenderMatch = (props) => {
+    return(
+      <tr>
+        <td>{props.rendermatch.Kickoff}</td>
+        <td>{props.rendermatch.StadiumId}</td>
+        <td>{props.rendermatch.HomeTeamId}</td>
+        <td>{props.rendermatch.HomeScores}</td>
+        <td>-</td>
+        <td>{props.rendermatch.AwayScores}</td>
+        <td>{props.rendermatch.AwayTeamId}</td>
+        <td>{props.rendermatch.RefereeTeamId}</td>
+      <td>
+      <button
+        type="button"
+        className="btn btn-primary "
+        data-toggle="modal"
+        data-target="#matchModal"
+        onClick={() => {
+          setId(props.rendermatch.id);
+          setMatch(props.rendermatch)
+        }}
+      >
+        Edit
+      </button>{" "}
+      <button
+        type="button"
+        className="btn btn-danger"
+        onClick={() => {
+          handleDelete(props.rendermatch.id);
+        }}
+      >
+         Delete
+      </button>
+      </td>
+      </tr>
+    )
+  }
+
+
+  const matchlist = () => {
+    return MatchsData.map((rendermatch) => {
+      return <RenderMatch rendermatch={rendermatch} key={rendermatch.id} />;
+    });
+  }
   return (
     <div>
       <MatchModal
         id={id}
-        data={matches.filter((x) => x.id === id)[0]}
+        data={match}
       ></MatchModal>
       <div className="content-header">
         <div className="container-fluid">
@@ -96,39 +152,7 @@ const Match = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {matches.map((val) => {
-                          return (
-                            <tr key={val.id}>
-                              <td>{val.kickOffTime}</td>
-                              <td>{val.stadiumNumber}</td>
-                              <td>{val.homeTeam}</td>
-                              <td>{val.homeScores}</td>
-                              <td>-</td>
-                              <td>{val.awayScores}</td>
-                              <td>{val.awayTeam}</td>
-                              <td>{val.refereeTeam}</td>
-                              <td>
-                                <button
-                                  type="button"
-                                  className="btn btn-primary "
-                                  data-toggle="modal"
-                                  data-target="#matchModal"
-                                  onClick={() => {
-                                    setId(val.id);
-                                  }}
-                                >
-                                  Edit
-                                </button>{" "}
-                                <button
-                                  type="button"
-                                  className="btn btn-danger"
-                                >
-                                  Delete
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                        {matchlist()}
                       </tbody>
                     </table>
                   </div>
@@ -142,4 +166,4 @@ const Match = () => {
   );
 };
 
-export default Match;
+export default MatchData;

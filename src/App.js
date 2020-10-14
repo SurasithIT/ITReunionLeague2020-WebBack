@@ -10,7 +10,6 @@ import Login from "./components/pages/Login";
 
 const App = () => {
   if (localStorage.getItem("token") === null) {
-    console.log("null");
     return (
       <Router>
         <Route path="/Login" component={Login} />
@@ -18,7 +17,6 @@ const App = () => {
       </Router>
     );
   } else {
-    console.log("pass");
     return (
       <Router>
         <Redirect to="/" />

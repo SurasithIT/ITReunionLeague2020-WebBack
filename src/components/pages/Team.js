@@ -18,13 +18,8 @@ const TeamData = () => {
     })
       .then((res) => {
         setDataTeam(res.data.teams);
-        console.log(res.data.teams);
       })
       .catch((err) => console.log(err));
-    // const apiCall = await fetch("https://itreuionapi.herokuapp.com/team/all");
-    // const datateam = await apiCall.json();
-    // setDataTeam(datateam.teams);
-    // console.log(datateam.teams);
   };
 
   useEffect(() => {
@@ -46,11 +41,11 @@ const TeamData = () => {
           console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
           //Show Dialog box หรือ Modal แจ้ง Error
         }
-        // window.location.reload()
-        // alert("Add Team Success");
       })
       .catch((err) => console.log(err));
   };
+
+
 
   const RenderTeam = (props) => {
     return (
@@ -72,7 +67,7 @@ const TeamData = () => {
             data-toggle="modal"
             data-target="#teamModal"
             onClick={() => {
-              setId(props.renderteam.id);
+              setId(1);
               setTeam(props.renderteam);
             }}
           >
@@ -127,9 +122,9 @@ const TeamData = () => {
                         className="btn btn-block btn-primary float-sm-right"
                         data-toggle="modal"
                         data-target="#teamModal"
-                        // onClick={() => {
-                        //   setId(-1);
-                        // }}
+                        onClick={() => {
+                          setId(-1);
+                        }}
                       >
                         <i className="fas fa-plus"></i> Add Team
                       </button>

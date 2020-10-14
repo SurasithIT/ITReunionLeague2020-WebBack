@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Alert } from 'react-alert';
+import { Redirect } from "react-router-dom";
 
 
 const TeamModal = (props) => {
   const [id, setId] = useState(0);
+  const [idteam, setIdteam] = useState(0);
   const [title, setTitle] = useState("");
   const [generation, setGeneration] = useState("");
   const [played, setPlayed] = useState(0);
@@ -32,16 +34,18 @@ const TeamModal = (props) => {
         setGoalDiff(0);
       } else {
         // fetch and then
+        console.log(props.data.id)
         setTitle("Edit");
-        setGeneration(props.data.generation);
-        setPlayed(props.data.played);
-        setWon(props.data.won);
-        setDrawn(props.data.drawn);
-        setLost(props.data.lost);
-        setPoints(props.data.points);
-        setGoalFor(props.data.goalFor);
-        setGoalAgainst(props.data.goalAgainst);
-        setGoalDiff(props.data.goalDifferent);
+        setGeneration(props.data.name);
+        setIdteam(props.data.id)
+        setPlayed(0);
+        setWon(0);
+        setDrawn(0);
+        setLost(0);
+        setPoints(0);
+        setGoalFor(0);
+        setGoalAgainst(0);
+        setGoalDiff(0);
       }
       setId(props.id);
     }
@@ -53,21 +57,47 @@ const TeamModal = (props) => {
     setPlayed(+won + +drawn + +lost);
   }, [won, drawn, lost, goalFor, goalAgainst]);
 
+
+
   const hanDleSubmit = () => {
-    const team = {
-      name: generation
-    }
-    console.log(team)
-    const token = localStorage.getItem('token')
-    axios.post('https://itreuionapi.herokuapp.com/team', team, {
-      headers: {
-        Authorization: token}
-    })
-    .then(res => {
-      // window.location.reload()
-      // alert("Add Team Success");
-    })
-    .catch((err) => console.log(err))
+        if(title === 'Add'){
+          const team = {
+            name: generation
+          }
+          const token = localStorage.getItem('token')
+          axios.post('https://itreuionapi.herokuapp.com/team', team, {
+            headers: {
+              Authorization: token}
+          })
+          .then(res => {
+            if (res.status === 200) {
+              console.log(res.status)
+            } else {
+              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+              //Show Dialog box หรือ Modal แจ้ง Error
+            }
+          })
+          .catch((err) => console.log(err))
+        }else{
+          const team = {
+            name: generation
+          }
+          const token = localStorage.getItem('token')
+          axios.patch('https://itreuionapi.herokuapp.com/team/' + idteam , team, {
+            headers: {
+              Authorization: token}
+          })
+          .then(res => {
+            if (res.status === 200) {
+              
+            } else {
+              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+              //Show Dialog box หรือ Modal แจ้ง Error
+            }
+          })
+          .catch((err) => console.log(err))
+        }
+        
   }
   return (
     <div>

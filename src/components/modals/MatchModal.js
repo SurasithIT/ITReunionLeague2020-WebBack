@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const MatchModal = (props) => {
   const [id, setId] = useState(0);
@@ -53,6 +54,55 @@ const MatchModal = (props) => {
       setId(props.id);
     }
   }, [id, props]);
+
+  const hanDleSubmit = () => {
+    if(title === 'Add'){
+      const match = {
+        'Kickoff' : kickOffTime,
+        'HomeScores' : homeScores,
+        'AwayScores' : awayScores,
+        'StadiumId' : stadiumList,
+        'HomeTeamId' : homeTeam,
+        'AwayTeamId' : awayTeam,
+        'RefereeTeamId' : refereeTeam
+      }
+      const token = localStorage.getItem('token')
+      axios.post('https://itreuionapi.herokuapp.com/match/', match, {
+        headers: {
+          Authorization: token}
+      })
+      .then(res => {
+        if (res.status === 200) {
+          console.log(res.status)
+        } else {
+          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+          //Show Dialog box หรือ Modal แจ้ง Error
+        }
+      })
+      .catch((err) => console.log(err))
+    }
+    // else{
+    //   const team = {
+    //     name: generation
+    //   }
+    //   const token = localStorage.getItem('token')
+    //   axios.patch('https://itreuionapi.herokuapp.com/team/' + idteam , team, {
+    //     headers: {
+    //       Authorization: token}
+    //   })
+    //   .then(res => {
+    //     if (res.status === 200) {
+          
+    //     } else {
+    //       console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+    //       //Show Dialog box หรือ Modal แจ้ง Error
+    //     }
+    //   })
+    //   .catch((err) => console.log(err))
+    // }
+    
+}
+
 
   return (
     <div>
@@ -197,7 +247,7 @@ const MatchModal = (props) => {
                 <div className="match-event">Match event</div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-primary">
+                <button type="button" className="btn btn-primary" onClick={hanDleSubmit}>
                   Save
                 </button>
                 <button
