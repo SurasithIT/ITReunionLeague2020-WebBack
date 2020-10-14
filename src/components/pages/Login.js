@@ -1,61 +1,84 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
+import axios from "axios";
+import  { Redirect } from 'react-router-dom';
 
-const Login = () => {
-  const [userName, setUserName] = useState(undefined);
-  const [password, setPassword] = useState(undefined);
 
-  const login = (event) => {
-    // event.preventDefault();
-    console.log("login");
-  };
+class Login extends Component {
 
-  return (
-    <div className="container login-container">
-      <div className="d-flex d-flex justify-content-center">
-        <div className="col-md-6 login-form-1">
-          <h3>Login</h3>
-          <form
-            onSubmit={(event) => {
-              login(event);
-            }}
-          >
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Username"
-                onChange={(event) => {
-                  setUserName(event.target.value);
-                }}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Password"
-                onChange={(event) => {
-                  setPassword(event.target.value);
-                }}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <button
-                className="btn btn-primary float-right"
-                onClick={(event) => {
-                  login(event);
-                }}
-              >
-                Log in
-              </button>
-            </div>
-          </form>
+  state={
+    username: "",
+    password: "",
+    haveuser: false,
+    
+  }
+
+  hanDleChange = (e) =>{
+    this.setState({
+      [e.target.id] : e.target.value 
+    })
+  }
+
+  hanDleSubmit = (e) => {
+    e.preventDefault();
+    const user = {
+      username: this.state.username,
+      password: this.state.password
+    }
+    axios.post('https://itreuionapi.herokuapp.com/user/login', user)
+    .then(res => {
+      const {token} = res.data;
+      localStorage.setItem('token', token);
+      this.setState({
+        haveuser: true
+      })
+
+    })
+    .catch((err) => console.log(err))
+  }
+
+  render(){
+    if (this.state.haveuser) window.location.reload()  
+    return (
+      <div className="container login-container">
+        <div className="d-flex d-flex justify-content-center">
+          <div className="col-md-6 login-form-1">
+            <h3>Login</h3>
+            <form
+              onSubmit={this.hanDleSubmit}
+            >
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Username"
+                  id='username'
+                  onChange={this.hanDleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  id='password'
+                  className="form-control"
+                  placeholder="Password"
+                  onChange={this.hanDleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <button
+                  className="btn btn-primary float-right"
+                >
+                  Log in
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default Login;

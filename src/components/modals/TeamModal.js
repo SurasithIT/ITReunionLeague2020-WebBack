@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Alert } from 'react-alert';
+
 
 const TeamModal = (props) => {
   const [id, setId] = useState(0);
@@ -14,9 +17,9 @@ const TeamModal = (props) => {
   const [goalDiff, setGoalDiff] = useState(0);
 
   useEffect(() => {
-    console.log(props);
     if (id !== props.id) {
       if (props.id === -1) {
+        console.log('Add')
         setTitle("Add");
         setGeneration("");
         setPlayed(0);
@@ -50,6 +53,22 @@ const TeamModal = (props) => {
     setPlayed(+won + +drawn + +lost);
   }, [won, drawn, lost, goalFor, goalAgainst]);
 
+  const hanDleSubmit = () => {
+    const team = {
+      name: generation
+    }
+    console.log(team)
+    const token = localStorage.getItem('token')
+    axios.post('https://itreuionapi.herokuapp.com/team', team, {
+      headers: {
+        Authorization: token}
+    })
+    .then(res => {
+      // window.location.reload()
+      // alert("Add Team Success");
+    })
+    .catch((err) => console.log(err))
+  }
   return (
     <div>
       <div>
@@ -211,7 +230,7 @@ const TeamModal = (props) => {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-primary">
+                <button type="button" className="btn btn-primary" onClick={hanDleSubmit}>
                   Save
                 </button>
                 <button

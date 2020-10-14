@@ -1,5 +1,11 @@
 import React from "react";
 
+
+const HandleLogout = () => {
+  // console.log('prame')
+  localStorage.removeItem('token')
+  window.location.reload()
+}
 const Header = () => {
   return (
     <nav className="main-header navbar navbar-expand navbar-white navbar-light">
@@ -13,7 +19,7 @@ const Header = () => {
       </ul>
       <ul className="navbar-nav ml-auto">
         <li className="nav-item">
-          <button className="btn btn-danger">Log out</button>
+          <button className="btn btn-danger" onClick={() => HandleLogout()}>Log out</button>
         </li>
       </ul>
     </nav>

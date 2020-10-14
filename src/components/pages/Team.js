@@ -1,37 +1,105 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import TeamModal from "../modals/TeamModal";
+import axios from "axios";
 
-class TeamData {
-  constructor(id, generation) {
-    this.id = id;
-    this.generation = generation;
-    this.played = 0;
-    this.won = 0;
-    this.drawn = 0;
-    this.lost = 0;
-    this.goalFor = 0;
-    this.goalAgainst = 0;
-    this.goalDifferent = 0;
-    this.points = 0;
-  }
-}
 
-let teams = [];
-for (let i = 1; i <= 9; i++) {
-  teams.push(
-    new TeamData(
-      i,
-      `${Math.floor(Math.random() * 18)} , ${Math.floor(Math.random() * 18)}`
-    )
-  );
-}
 
-const Team = () => {
+
+
+
+const  TeamData = () => {
+  
+
+  const [DataTeam, setDataTeam] = useState([])
   const [id, setId] = useState(-1);
+  const [team, setTeam] = useState({})
+  const fetchTeam = async () => {
+    const apiCall = await fetch('https://itreuionapi.herokuapp.com/team/all')
+    const datateam = await apiCall.json()
+    setDataTeam(datateam.teams)
+    // console.log(datateam.teams)
+  }
+
+  useEffect(() => {
+    fetchTeam()
+    // const URL = "https://itreuionapi.herokuapp.com/team/all";
+    // axios({
+    //   method: "get",
+    //   url: URL,
+    //   data: {
+    //     KEY: "VALUE",
+    //   },
+    // })
+    //   .then((res) => {
+    //     setDataTeam(res.data.teams);
+    //     console.log(res.data.teams)
+    //   })
+    //   .catch((err) => console.log(err));
+   }, []);
+  
+
+  const handleDelete = (idteam) => {
+    const token = localStorage.getItem('token')
+      axios.delete('https://itreuionapi.herokuapp.com/team/' + idteam, {
+        headers: {
+          Authorization: token}
+      })
+      .then(res => {
+          console.log(res.status)
+        // window.location.reload()
+        // alert("Add Team Success");
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const RenderTeam = (props) => {
+    return(
+        <tr>
+          <td>{props.renderteam.name}</td>
+          <td>16</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>
+            <button
+              type="button"
+              className="btn btn-primary"
+              data-toggle="modal"
+              data-target="#teamModal"
+              onClick={() => {
+                setId(props.renderteam.id);
+                setTeam(props.renderteam)
+              }}
+            >
+              Edit
+            </button>{" "}
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => {handleDelete(props.renderteam.id)}}
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      );
+  }
+  const Teamlist = () => {
+
+    return DataTeam.map((renderteam) => {
+      return <RenderTeam renderteam={renderteam} key={renderteam.id}/>
+    })
+  }
+
 
   return (
     <div>
-      <TeamModal id={id} data={teams.filter((x) => x.id === id)[0]}></TeamModal>
+      <TeamModal id={id} data={team}></TeamModal>
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -59,9 +127,9 @@ const Team = () => {
                         className="btn btn-block btn-primary float-sm-right"
                         data-toggle="modal"
                         data-target="#teamModal"
-                        onClick={() => {
-                          setId(-1);
-                        }}
+                        // onClick={() => {
+                        //   setId(-1);
+                        // }}
                       >
                         <i className="fas fa-plus"></i> Add Team
                       </button>
@@ -87,41 +155,7 @@ const Team = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {teams.map((val) => {
-                          return (
-                            <tr key={val.id}>
-                              <td>{val.id}</td>
-                              <td>{val.generation}</td>
-                              <td>{val.played}</td>
-                              <td>{val.won}</td>
-                              <td>{val.drawn}</td>
-                              <td>{val.lost}</td>
-                              <td>{val.goalFor}</td>
-                              <td>{val.goalAgainst}</td>
-                              <td>{val.goalDifferent}</td>
-                              <td>{val.points}</td>
-                              <td>
-                                <button
-                                  type="button"
-                                  className="btn btn-primary"
-                                  data-toggle="modal"
-                                  data-target="#teamModal"
-                                  onClick={() => {
-                                    setId(val.id);
-                                  }}
-                                >
-                                  Edit
-                                </button>{" "}
-                                <button
-                                  type="button"
-                                  className="btn btn-danger"
-                                >
-                                  Delete
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                        {Teamlist()}
                       </tbody>
                     </table>
                   </div>
@@ -132,7 +166,8 @@ const Team = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Team;
+
+export default TeamData
