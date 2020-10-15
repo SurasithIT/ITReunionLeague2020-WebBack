@@ -26,6 +26,7 @@ const MatchData = () => {
 
   useEffect(() => {
     fetchMatch();
+    return () => {};
   }, []);
 
   const handleDelete = (idmatch) => {

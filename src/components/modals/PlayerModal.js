@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import GenerationDropdown from "../dropdown/GenerationDropdown";
 
 const PlayerModal = (props) => {
   const [id, setId] = useState(0);
@@ -22,12 +22,12 @@ const PlayerModal = (props) => {
         setLastNameTh("");
         setFirstNameEn("");
         setLastNameEn("");
-        setGeneration(0);
+        setGeneration("");
         setNumber("");
         setScores(0);
       } else {
         setTitle("Edit");
-        console.log(props.data.id)
+        console.log(props.data.id);
         setFirstNameTh(props.data.FirstNameTh);
         setLastNameTh(props.data.LastNameTh);
         setFirstNameEn(props.data.FirstNameEn);
@@ -35,64 +35,68 @@ const PlayerModal = (props) => {
         setGeneration(props.data.Generation);
         setNumber(props.data.Number);
         setScores(0);
-        setIdplayer(props.data.id)
+        setIdplayer(props.data.id);
       }
       setId(props.id);
     }
+    return () => {};
   }, [id, props.id, props.data]);
 
   const hanDleSubmit = () => {
-    if(title === 'Add'){
+    if (title === "Add") {
       const player = {
-        'FirstNameTh': firstNameTh,
-        'LastNameTh': lastNameTh,
-        'FirstNameEn': firstNameEn,
-        'LastNameEn' : lastNameEn,
-        'Number' : number,
-        'Scores' : scores,
-        'Generation' : generation
-      }
-      const token = localStorage.getItem('token')
-      axios.post('https://itreuionapi.herokuapp.com/player', player, {
-        headers: {
-          Authorization: token}
-      })
-      .then(res => {
-        if (res.status === 200) {
-          console.log(res.status)
-        } else {
-          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-          //Show Dialog box หรือ Modal แจ้ง Error
-        }
-      })
-      .catch((err) => console.log(err))
-    }else{
+        FirstNameTh: firstNameTh,
+        LastNameTh: lastNameTh,
+        FirstNameEn: firstNameEn,
+        LastNameEn: lastNameEn,
+        Number: number,
+        Scores: scores,
+        Generation: generation,
+      };
+      const token = localStorage.getItem("token");
+      axios
+        .post("https://itreuionapi.herokuapp.com/player", player, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.status);
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
       const player = {
-        'FirstNameTh': firstNameTh,
-        'LastNameTh': lastNameTh,
-        'FirstNameEn': firstNameEn,
-        'LastNameEn' : lastNameEn,
-        'Number' : number,
-        'Scores' : scores,
-        'Generation' : generation
-      }
-      const token = localStorage.getItem('token')
-      axios.patch('https://itreuionapi.herokuapp.com/player/' + idplayer , player, {
-        headers: {
-          Authorization: token}
-      })
-      .then(res => {
-        if (res.status === 200) {
-          
-        } else {
-          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-          //Show Dialog box หรือ Modal แจ้ง Error
-        }
-      })
-      .catch((err) => console.log(err))
+        FirstNameTh: firstNameTh,
+        LastNameTh: lastNameTh,
+        FirstNameEn: firstNameEn,
+        LastNameEn: lastNameEn,
+        Number: number,
+        Scores: scores,
+        Generation: generation,
+      };
+      const token = localStorage.getItem("token");
+      axios
+        .patch("https://itreuionapi.herokuapp.com/player/" + idplayer, player, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
+          }
+        })
+        .catch((err) => console.log(err));
     }
-  }
-    
+  };
+
   return (
     <div>
       <div>
@@ -179,7 +183,13 @@ const PlayerModal = (props) => {
                     </div>
 
                     <div className="col-4">
-                      <label htmlFor="generation">Generation :</label>
+                      <GenerationDropdown
+                        id="generation"
+                        label="Generation :"
+                        value={generation || ""}
+                        setValue={setGeneration}
+                      />
+                      {/* <label htmlFor="generation">Generation :</label>
                       <select
                         className="form-control"
                         id="generation"
@@ -192,7 +202,7 @@ const PlayerModal = (props) => {
                         <option>2</option>
                         <option>3</option>
                         <option>4</option>
-                      </select>
+                      </select> */}
                     </div>
 
                     <div className="col-4">
@@ -225,7 +235,11 @@ const PlayerModal = (props) => {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={hanDleSubmit}>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={hanDleSubmit}
+                >
                   Save
                 </button>
                 <button

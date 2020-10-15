@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Alert } from "react-alert";
 import { Redirect } from "react-router-dom";
-import { Alert } from 'react-alert'
+
 const TeamModal = (props) => {
   const [id, setId] = useState(0);
   const [idteam, setIdteam] = useState(0);
@@ -19,7 +20,7 @@ const TeamModal = (props) => {
   useEffect(() => {
     if (id !== props.id) {
       if (props.id === -1) {
-        console.log('Add')
+        console.log("Add");
         setTitle("Add");
         setGeneration("");
         setPlayed(0);
@@ -32,10 +33,10 @@ const TeamModal = (props) => {
         setGoalDiff(0);
       } else {
         // fetch and then
-        console.log(props.data.id)
+        console.log(props.data.id);
         setTitle("Edit");
         setGeneration(props.data.name);
-        setIdteam(props.data.id)
+        setIdteam(props.data.id);
         setPlayed(0);
         setWon(0);
         setDrawn(0);
@@ -47,6 +48,9 @@ const TeamModal = (props) => {
       }
       setId(props.id);
     }
+    return () => {
+      axios.CancelToken.source().cancel();
+    };
   }, [id, props]);
 
   useEffect(() => {
@@ -55,55 +59,48 @@ const TeamModal = (props) => {
     setPlayed(+won + +drawn + +lost);
   }, [won, drawn, lost, goalFor, goalAgainst]);
 
-
-
   const hanDleSubmit = () => {
-        if(title === 'Add'){
-          const team = {
-            name: generation
+    if (title === "Add") {
+      const team = {
+        name: generation,
+      };
+      const token = localStorage.getItem("token");
+      axios
+        .post("https://itreuionapi.herokuapp.com/team", team, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.status);
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
           }
-          const token = localStorage.getItem('token')
-          axios.post('https://itreuionapi.herokuapp.com/team', team, {
-            headers: {
-              Authorization: token}
-          })
-          .then(res => {
-            if (res.status === 200) {
-              console.log(res.status)
-              alert('add data success')
-            } else {
-              // return(
-              //   <Alert variant="danger">
-              //     <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-              //   </Alert>
-              // )
-              alert('bad data')
-              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-              //Show Dialog box หรือ Modal แจ้ง Error
-            }
-          })
-          .catch((err) => console.log(err))
-        }else{
-          const team = {
-            name: generation
+        })
+        .catch((err) => console.log(err));
+    } else {
+      const team = {
+        name: generation,
+      };
+      const token = localStorage.getItem("token");
+      axios
+        .patch("https://itreuionapi.herokuapp.com/team/" + idteam, team, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
           }
-          const token = localStorage.getItem('token')
-          axios.patch('https://itreuionapi.herokuapp.com/team/' + idteam , team, {
-            headers: {
-              Authorization: token}
-          })
-          .then(res => {
-            if (res.status === 200) {
-              
-            } else {
-              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-              //Show Dialog box หรือ Modal แจ้ง Error
-            }
-          })
-          .catch((err) => console.log(err))
-        }
-        
-  }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
   return (
     <div>
       <div>
@@ -136,7 +133,6 @@ const TeamModal = (props) => {
                     <div className="col-4">
                       <label htmlFor="generation">Generation :</label>
                       <input
-                        readOnly= {true}
                         type="text"
                         className="form-control"
                         id="generation"
@@ -266,7 +262,11 @@ const TeamModal = (props) => {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={hanDleSubmit}>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={hanDleSubmit}
+                >
                   Save
                 </button>
                 <button

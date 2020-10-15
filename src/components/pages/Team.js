@@ -24,6 +24,7 @@ const TeamData = () => {
 
   useEffect(() => {
     fetchTeam();
+    return () => {};
   }, []);
 
   const handleDelete = (idteam) => {
@@ -44,8 +45,6 @@ const TeamData = () => {
       })
       .catch((err) => console.log(err));
   };
-
-
 
   const RenderTeam = (props) => {
     return (

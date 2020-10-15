@@ -1,71 +1,84 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import TeamDropdown from "../dropdown/TeamDropdown";
 
-
-const PlayerModal = (props) => {
+const GenerationModal = (props) => {
   const [id, setId] = useState(0);
-  const [title, setTitle] = useState("");
-  const [generation, setGeneration] = useState("");
-  const [idgeneration, setIdgeneration] = useState("");
-
-
+  const [title, setTitle] = useState();
+  const [generation, setGeneration] = useState();
+  const [team, setTeam] = useState();
+  const [idgeneration, setIdgeneration] = useState();
 
   useEffect(() => {
     if (id !== props.id) {
       if (props.id === -1) {
         setTitle("Add");
-        setGeneration("");
       } else {
         setTitle("Edit");
-        console.log(props.data.id)
-        setGeneration(props.data.FirstNameTh);
-        setIdgeneration(props.data.id)
-
+        console.log(props.data.id);
+        setGeneration(props.data.number);
+        setIdgeneration(props.data.id);
+        setTeam(props.data.teamId);
       }
       setId(props.id);
     }
+    return () => {
+      axios.CancelToken.source().cancel();
+    };
   }, [id, props.id, props.data]);
 
   const hanDleSubmit = () => {
-    if(title === 'Add'){
+    if (title === "Add") {
       const newgeneration = {
-        'number': generation
-      }
-      const token = localStorage.getItem('token')
-      axios.post('https://itreuionapi.herokuapp.com/team/generation', newgeneration, {
-        headers: {
-          Authorization: token}
-      })
-      .then(res => {
-        if (res.status === 200) {
-          console.log(res.status)
-        } else {
-          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-          //Show Dialog box หรือ Modal แจ้ง Error
-        }
-      })
-      .catch((err) => console.log(err))
-    }else{
+        number: generation,
+      };
+      const token = localStorage.getItem("token");
+      axios
+        .post(
+          "https://itreuionapi.herokuapp.com/team/generation",
+          newgeneration,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.status);
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
       const editgeneration = {
-        'number': generation
-      }
-      const token = localStorage.getItem('token')
-      axios.patch('https://itreuionapi.herokuapp.com/team/generation' + idgeneration , editgeneration, {
-        headers: {
-          Authorization: token}
-      })
-      .then(res => {
-        if (res.status === 200) {
-          
-        } else {
-          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-          //Show Dialog box หรือ Modal แจ้ง Error
-        }
-      })
-      .catch((err) => console.log(err))
+        number: generation,
+      };
+      const token = localStorage.getItem("token");
+      axios
+        .patch(
+          "https://itreuionapi.herokuapp.com/team/generation/" + idgeneration,
+          editgeneration,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
+          }
+        })
+        .catch((err) => console.log(err));
     }
-  }
-    
+  };
+  console.log(props);
   return (
     <div>
       <div>
@@ -96,23 +109,46 @@ const PlayerModal = (props) => {
                 <div className="form-group">
                   <div className="row">
                     <div className="col-6">
-                      <label htmlFor="firstNameTh">รุ่น :</label>
+                      <label htmlFor="generation">Generation :</label>
                       <input
                         type="text"
                         className="form-control"
-                        id="firstNameTh"
+                        id="generation"
                         required
-                        value={generation}
+                        value={generation || ""}
                         onChange={(event) => {
                           setGeneration(event.target.value);
                         }}
                       />
                     </div>
+                    <div className="col-6">
+                      <TeamDropdown
+                        id="team"
+                        label="Team :"
+                        value={team || ""}
+                        setValue={setTeam}
+                      />
+                      {/* <label htmlFor="team">Team :</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="team"
+                        required
+                        value={generation}
+                        onChange={(event) => {
+                          setGeneration(event.target.value);
+                        }}
+                      /> */}
+                    </div>
                   </div>
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={hanDleSubmit}>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={hanDleSubmit}
+                >
                   Save
                 </button>
                 <button
@@ -131,4 +167,4 @@ const PlayerModal = (props) => {
   );
 };
 
-export default PlayerModal;
+export default GenerationModal;

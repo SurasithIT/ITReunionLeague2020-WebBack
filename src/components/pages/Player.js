@@ -18,18 +18,18 @@ const Player = () => {
       },
     })
       .then((res) => {
-        console.log(res.data.player)
+        console.log(res.data.player);
         setPlayersData(res.data.player);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   useEffect(() => {
-    fetchPlayer()
+    fetchPlayer();
+    return () => {};
   }, []);
 
-  const handleDelete = (idplayer) =>{
-
+  const handleDelete = (idplayer) => {
     const token = localStorage.getItem("token");
     axios
       .delete("https://itreuionapi.herokuapp.com/player/" + idplayer, {
@@ -46,9 +46,7 @@ const Player = () => {
         }
       })
       .catch((err) => console.log(err));
-
-
-  }
+  };
 
   const RenderPlayer = (props) => {
     return (
@@ -73,7 +71,13 @@ const Player = () => {
           >
             Edit
           </button>{" "}
-          <button type="button" className="btn btn-danger" onClick={() => {handleDelete(props.renderplayer.id)} }>
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => {
+              handleDelete(props.renderplayer.id);
+            }}
+          >
             Delete
           </button>
         </td>

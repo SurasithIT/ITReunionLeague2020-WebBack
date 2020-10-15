@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import TeamDropdown from "../Common/Dropdown/TeamDropdown";
+import TeamDropdown from "../dropdown/TeamDropdown";
 
 const MatchModal = (props) => {
   const [id, setId] = useState(0);
   const [title, setTitle] = useState("");
-  const [kickOffTime, setKickOffTime] = useState(
-    new Date().toLocaleTimeString("th-TH", {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  );
+  const [kickOffTime, setKickOffTime] = useState(new Date());
   const [stadiumNumber, setStadiumNumber] = useState(0);
   const [homeTeam, setHomeTeam] = useState(0);
   const [awayTeam, setAwayTeam] = useState(0);
@@ -45,31 +39,23 @@ const MatchModal = (props) => {
     if (id !== props.id) {
       if (props.id === -1) {
         setTitle("Add");
-        setKickOffTime(
-          new Date().toLocaleTimeString("th-TH", {
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        );
+        setKickOffTime(new Date());
         setStadiumNumber(1);
-        setHomeTeam(0);
-        setAwayTeam(0);
         setHomeScores(0);
         setAwayScores(0);
-        setRefereeTeam(0);
       } else {
         setTitle("Edit");
-        setKickOffTime(props.data.kickOffTime);
-        setStadiumNumber(props.data.stadiumNumber);
-        setHomeTeam(props.data.homeTeam);
-        setAwayTeam(props.data.awayTeam);
-        setHomeScores(props.data.homeScores);
-        setAwayScores(props.data.awayScores);
-        setRefereeTeam(props.data.refereeTeam);
+        setKickOffTime(props.data.Kickoff);
+        setStadiumNumber(props.data.StadiumNumber);
+        setHomeTeam(props.data.HomeTeam);
+        setAwayTeam(props.data.AwayTeam);
+        setHomeScores(+props.data.HomeScores);
+        setAwayScores(+props.data.AwayScores);
+        setRefereeTeam(props.data.RefereeTeam);
       }
       setId(props.id);
     }
+    return () => {};
   }, [id, props]);
 
   const hanDleSubmit = () => {
@@ -158,9 +144,27 @@ const MatchModal = (props) => {
                           className="form-control"
                           id="kickOffTime"
                           required
-                          value={kickOffTime}
+                          value={
+                            new Date(
+                              Date.parse(kickOffTime)
+                            ).toLocaleTimeString("th-TH", {
+                              hour12: false,
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }) || "07:00"
+                          }
                           onChange={(event) => {
                             console.log(event);
+                            console.log(kickOffTime);
+                            console.log(
+                              new Date(
+                                Date.parse(kickOffTime)
+                              ).toLocaleTimeString("th-TH", {
+                                hour12: false,
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })
+                            );
                             // setKickOff(event.target.value);
                           }}
                         />
@@ -209,7 +213,7 @@ const MatchModal = (props) => {
                         <TeamDropdown
                           id="refTeam"
                           label="Referee Team :"
-                          value={refereeTeam}
+                          value={refereeTeam || ""}
                           setValue={setRefereeTeam}
                         />
                       </div>
@@ -229,7 +233,7 @@ const MatchModal = (props) => {
                         <TeamDropdown
                           id="homeTeam"
                           label="Home Team :"
-                          value={homeTeam}
+                          value={homeTeam || ""}
                           setValue={setHomeTeam}
                         />
                       </div>

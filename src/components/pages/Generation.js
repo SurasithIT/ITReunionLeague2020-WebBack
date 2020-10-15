@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import GenerationModal from "../modals/GenerationModal";
 
-
-const Generation = () =>{
-
+const Generation = () => {
   const [generaionData, setGenerationData] = useState([]);
   const [id, setId] = useState(-1);
   const [generation, setGeneraton] = useState({});
-  
+
   const fetchMatch = () => {
     const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
     const URL = "https://itreuionapi.herokuapp.com/team/generation/all";
@@ -20,15 +18,16 @@ const Generation = () =>{
       },
     })
       .then((res) => {
-        console.log(res.data.generation)
+        console.log(res.data.generation);
         setGenerationData(res.data.generation);
         // console.log(generaionData)
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   useEffect(() => {
-    fetchMatch()
+    fetchMatch();
+    return () => {};
   }, []);
 
   const handleDelete = (idgen) => {
@@ -51,49 +50,45 @@ const Generation = () =>{
   };
 
   const RenderGeneration = (props) => {
-    return(
+    return (
       <tr>
         <td>{props.rendergen.number}</td>
         <td>{props.rendergen.teamId}</td>
-      <td>
-      <button
-        type="button"
-        className="btn btn-primary "
-        data-toggle="modal"
-        data-target="#generationModal"
-        onClick={() => {
-          setId(props.rendergen.id);
-          setGeneraton(props.rendergen)
-        }}
-      >
-        Edit
-      </button>{" "}
-      <button
-        type="button"
-        className="btn btn-danger"
-        onClick={() => {
-          handleDelete(props.rendergen.id);
-        }}
-      >
-         Delete
-      </button>
-      </td>
+        <td>
+          <button
+            type="button"
+            className="btn btn-primary "
+            data-toggle="modal"
+            data-target="#generationModal"
+            onClick={() => {
+              setId(props.rendergen.id);
+              setGeneraton(props.rendergen);
+            }}
+          >
+            Edit
+          </button>{" "}
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => {
+              handleDelete(props.rendergen.id);
+            }}
+          >
+            Delete
+          </button>
+        </td>
       </tr>
-    )
-  }
-
+    );
+  };
 
   const generationlist = () => {
     return generaionData.map((rendergen) => {
       return <RenderGeneration rendergen={rendergen} key={rendergen.id} />;
     });
-  }
+  };
   return (
     <div>
-      <GenerationModal
-        id={id}
-        data={generation}
-      ></GenerationModal>
+      <GenerationModal id={id} data={generation}></GenerationModal>
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -136,13 +131,11 @@ const Generation = () =>{
                       <thead className="thead-dark">
                         <tr>
                           <th width="40%">Generation</th>
-                          <th width="84%">Teams</th>
+                          <th width="40%">Team</th>
                           <th width="20%"></th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {generationlist()}
-                      </tbody>
+                      <tbody>{generationlist()}</tbody>
                     </table>
                   </div>
                 </div>
