@@ -4,6 +4,7 @@ import TeamDropdown from "../dropdown/TeamDropdown";
 import MatchEvent from "../event/MatchEvent";
 import StadiumDropdown from "../dropdown/StadiumDropdown";
 import { event } from "jquery";
+import { trackPromise } from "react-promise-tracker";
 
 const MatchModal = (props) => {
   const [id, setId] = useState(0);
@@ -63,21 +64,23 @@ const MatchModal = (props) => {
         RefereeTeamId: refereeTeam,
       };
       const token = localStorage.getItem("token");
-      axios
-        .post("https://itreuionapi.herokuapp.com/match/", match, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res.status);
-          } else {
-            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-            //Show Dialog box หรือ Modal แจ้ง Error
-          }
-        })
-        .catch((err) => console.log(err));
+      trackPromise(
+        axios
+          .post("https://itreuionapi.herokuapp.com/match/", match, {
+            headers: {
+              Authorization: token,
+            },
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res.status);
+            } else {
+              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+              //Show Dialog box หรือ Modal แจ้ง Error
+            }
+          })
+          .catch((err) => console.log(err))
+      );
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MatchModal from "../modals/MatchModal";
+import { trackPromise } from "react-promise-tracker";
 
 const MatchData = () => {
   const [MatchsData, setMatchsData] = useState([]);
@@ -10,18 +11,21 @@ const MatchData = () => {
   const fetchMatch = () => {
     const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
     const URL = "https://itreuionapi.herokuapp.com/match";
-    axios({
-      method: "get",
-      url: PROXY_URL + URL,
-      data: {
-        KEY: "VALUE",
-      },
-    })
-      .then((res) => {
-        setMatchsData(res.data.matchs);
-        console.log(res.data);
+
+    trackPromise(
+      axios({
+        method: "get",
+        url: PROXY_URL + URL,
+        data: {
+          KEY: "VALUE",
+        },
       })
-      .catch((err) => console.log(err));
+        .then((res) => {
+          setMatchsData(res.data.matchs);
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err))
+    );
   };
 
   useEffect(() => {
@@ -31,21 +35,23 @@ const MatchData = () => {
 
   const handleDelete = (idmatch) => {
     const token = localStorage.getItem("token");
-    axios
-      .delete("https://itreuionapi.herokuapp.com/match/" + idmatch, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          fetchMatch();
-        } else {
-          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-          //Show Dialog box หรือ Modal แจ้ง Error
-        }
-      })
-      .catch((err) => console.log(err));
+    trackPromise(
+      axios
+        .delete("https://itreuionapi.herokuapp.com/match/" + idmatch, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            fetchMatch();
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
+          }
+        })
+        .catch((err) => console.log(err))
+    );
   };
 
   const RenderMatch = (props) => {

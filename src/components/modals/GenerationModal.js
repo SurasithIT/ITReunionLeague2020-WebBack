@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TeamDropdown from "../dropdown/TeamDropdown";
+import { trackPromise } from "react-promise-tracker";
 
 const GenerationModal = (props) => {
   const [id, setId] = useState(0);
@@ -33,49 +34,53 @@ const GenerationModal = (props) => {
         number: generation,
       };
       const token = localStorage.getItem("token");
-      axios
-        .post(
-          "https://itreuionapi.herokuapp.com/team/generation",
-          newgeneration,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res.status);
-          } else {
-            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-            //Show Dialog box หรือ Modal แจ้ง Error
-          }
-        })
-        .catch((err) => console.log(err));
+      trackPromise(
+        axios
+          .post(
+            "https://itreuionapi.herokuapp.com/team/generation",
+            newgeneration,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res.status);
+            } else {
+              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+              //Show Dialog box หรือ Modal แจ้ง Error
+            }
+          })
+          .catch((err) => console.log(err))
+      );
     } else {
       const editgeneration = {
         number: generation,
       };
       const token = localStorage.getItem("token");
-      axios
-        .patch(
-          "https://itreuionapi.herokuapp.com/team/generation/" + idgeneration,
-          editgeneration,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res);
-          } else {
-            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-            //Show Dialog box หรือ Modal แจ้ง Error
-          }
-        })
-        .catch((err) => console.log(err));
+      trackPromise(
+        axios
+          .patch(
+            "https://itreuionapi.herokuapp.com/team/generation/" + idgeneration,
+            editgeneration,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res);
+            } else {
+              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+              //Show Dialog box หรือ Modal แจ้ง Error
+            }
+          })
+          .catch((err) => console.log(err))
+      );
     }
   };
   console.log(props);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import GenerationDropdown from "../dropdown/GenerationDropdown";
+import { trackPromise } from "react-promise-tracker";
 
 const PlayerModal = (props) => {
   const [id, setId] = useState(0);
@@ -54,21 +55,23 @@ const PlayerModal = (props) => {
         Generation: generation,
       };
       const token = localStorage.getItem("token");
-      axios
-        .post("https://itreuionapi.herokuapp.com/player", player, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res.status);
-          } else {
-            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-            //Show Dialog box หรือ Modal แจ้ง Error
-          }
-        })
-        .catch((err) => console.log(err));
+      trackPromise(
+        axios
+          .post("https://itreuionapi.herokuapp.com/player", player, {
+            headers: {
+              Authorization: token,
+            },
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res.status);
+            } else {
+              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+              //Show Dialog box หรือ Modal แจ้ง Error
+            }
+          })
+          .catch((err) => console.log(err))
+      );
     } else {
       const player = {
         FirstNameTh: firstNameTh,
@@ -80,20 +83,26 @@ const PlayerModal = (props) => {
         Generation: generation,
       };
       const token = localStorage.getItem("token");
-      axios
-        .patch("https://itreuionapi.herokuapp.com/player/" + idplayer, player, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-          } else {
-            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-            //Show Dialog box หรือ Modal แจ้ง Error
-          }
-        })
-        .catch((err) => console.log(err));
+      trackPromise(
+        axios
+          .patch(
+            "https://itreuionapi.herokuapp.com/player/" + idplayer,
+            player,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          )
+          .then((res) => {
+            if (res.status === 200) {
+            } else {
+              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+              //Show Dialog box หรือ Modal แจ้ง Error
+            }
+          })
+          .catch((err) => console.log(err))
+      );
     }
   };
 
