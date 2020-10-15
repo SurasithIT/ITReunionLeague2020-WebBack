@@ -42,6 +42,12 @@ const Sidebar = () => {
                 <p>Player</p>
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink to="/Generation" className="nav-link">
+                <i className="nav-icon fas fa-user" />
+                <p>Generation</p>
+              </NavLink>
+            </li>
           </ul>
         </nav>
       </div>

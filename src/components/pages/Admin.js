@@ -21,6 +21,7 @@ const Admin = () => {
       <AdminCard name="Match" iconName="table"></AdminCard>
       <AdminCard name="Team" iconName="users"></AdminCard>
       <AdminCard name="Player" iconName="user"></AdminCard>
+      <AdminCard name="Generation" iconName="user"></AdminCard>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import Match from "./pages/Match";
 import Player from "./pages/Player";
 import Team from "./pages/Team";
 import Admin from "./pages/Admin";
+import Generation from "./pages/Generation"
 
 const Content = () => {
   return (
@@ -14,6 +15,7 @@ const Content = () => {
       <Route path="/Match" component={Match} />
       <Route path="/Team" component={Team} />
       <Route path="/Player" component={Player} />
+      <Route path="/Generation" component={Generation} />
       {/* </Switch> */}
     </div>
   );

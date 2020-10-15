@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Alert } from 'react-alert';
 import { Redirect } from "react-router-dom";
-
-
+import { Alert } from 'react-alert'
 const TeamModal = (props) => {
   const [id, setId] = useState(0);
   const [idteam, setIdteam] = useState(0);
@@ -72,7 +70,14 @@ const TeamModal = (props) => {
           .then(res => {
             if (res.status === 200) {
               console.log(res.status)
+              alert('add data success')
             } else {
+              // return(
+              //   <Alert variant="danger">
+              //     <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+              //   </Alert>
+              // )
+              alert('bad data')
               console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
               //Show Dialog box หรือ Modal แจ้ง Error
             }
@@ -131,6 +136,7 @@ const TeamModal = (props) => {
                     <div className="col-4">
                       <label htmlFor="generation">Generation :</label>
                       <input
+                        readOnly= {true}
                         type="text"
                         className="form-control"
                         id="generation"
