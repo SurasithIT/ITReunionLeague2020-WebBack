@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EventStatusDropdown from "../dropdown/EventStatusDropdown";
 import PlayerDropdown from "../dropdown/PlayerDropdown";
 import TeamDropdown from "../dropdown/TeamDropdown";
@@ -6,7 +6,14 @@ import TeamDropdown from "../dropdown/TeamDropdown";
 const MatchEvent = (props) => {
   const [minutes, setMinutes] = useState(0);
   const [team, setTeam] = useState("");
+  const [player, setPlayer] = useState("");
   const [status, setStatus] = useState("");
+
+  useEffect(() => {
+    setPlayer(player);
+    setTeam(team);
+    return () => {};
+  }, []);
 
   return (
     <div className="row">
@@ -35,8 +42,9 @@ const MatchEvent = (props) => {
         <PlayerDropdown
           id="player"
           label="Player :"
-          value={1 || ""}
-          setValue={setStatus}
+          team={team}
+          value={player}
+          setValue={setPlayer}
         />
       </div>
       <div className="col-3">
