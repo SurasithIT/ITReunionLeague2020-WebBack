@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MatchModal from "../modals/MatchModal";
 
-
-const MatchData = () =>{
-
+const MatchData = () => {
   const [MatchsData, setMatchsData] = useState([]);
   const [id, setId] = useState(-1);
   const [match, setMatch] = useState({});
-  
+
   const fetchMatch = () => {
     const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
     const URL = "https://itreuionapi.herokuapp.com/match";
@@ -21,13 +19,13 @@ const MatchData = () =>{
     })
       .then((res) => {
         setMatchsData(res.data.matchs);
-        console.log(res.data)
+        console.log(res.data);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   useEffect(() => {
-    fetchMatch()
+    fetchMatch();
   }, []);
 
   const handleDelete = (idmatch) => {
@@ -50,7 +48,7 @@ const MatchData = () =>{
   };
 
   const RenderMatch = (props) => {
-    return(
+    return (
       <tr>
         <td>{props.rendermatch.Kickoff}</td>
         <td>{props.rendermatch.StadiumId}</td>
@@ -60,45 +58,41 @@ const MatchData = () =>{
         <td>{props.rendermatch.AwayScores}</td>
         <td>{props.rendermatch.AwayTeamId}</td>
         <td>{props.rendermatch.RefereeTeamId}</td>
-      <td>
-      <button
-        type="button"
-        className="btn btn-primary "
-        data-toggle="modal"
-        data-target="#matchModal"
-        onClick={() => {
-          setId(props.rendermatch.id);
-          setMatch(props.rendermatch)
-        }}
-      >
-        Edit
-      </button>{" "}
-      <button
-        type="button"
-        className="btn btn-danger"
-        onClick={() => {
-          handleDelete(props.rendermatch.id);
-        }}
-      >
-         Delete
-      </button>
-      </td>
+        <td>
+          <button
+            type="button"
+            className="btn btn-primary "
+            data-toggle="modal"
+            data-target="#matchModal"
+            onClick={() => {
+              setId(props.rendermatch.id);
+              setMatch(props.rendermatch);
+            }}
+          >
+            Edit
+          </button>{" "}
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => {
+              handleDelete(props.rendermatch.id);
+            }}
+          >
+            Delete
+          </button>
+        </td>
       </tr>
-    )
-  }
-
+    );
+  };
 
   const matchlist = () => {
     return MatchsData.map((rendermatch) => {
       return <RenderMatch rendermatch={rendermatch} key={rendermatch.id} />;
     });
-  }
+  };
   return (
     <div>
-      <MatchModal
-        id={id}
-        data={match}
-      ></MatchModal>
+      <MatchModal id={id} data={match}></MatchModal>
       <div className="content-header">
         <div className="container-fluid">
           <div className="row mb-2">
@@ -151,9 +145,7 @@ const MatchData = () =>{
                           <th width="20%"></th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {matchlist()}
-                      </tbody>
+                      <tbody>{matchlist()}</tbody>
                     </table>
                   </div>
                 </div>
