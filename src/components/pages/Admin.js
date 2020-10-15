@@ -18,10 +18,18 @@ const Admin = () => {
           </div>
         </div>
       </div>
-      <AdminCard name="Match" iconName="table"></AdminCard>
-      <AdminCard name="Team" iconName="users"></AdminCard>
-      <AdminCard name="Player" iconName="user"></AdminCard>
-      <AdminCard name="Generation" iconName="user"></AdminCard>
+      <div className="col-6">
+        <AdminCard name="Match" iconName="table"></AdminCard>
+      </div>
+      <div className="col-6">
+        <AdminCard name="Team" iconName="users"></AdminCard>
+      </div>
+      <div className="col-6">
+        <AdminCard name="Player" iconName="user"></AdminCard>
+      </div>
+      <div className="col-6">
+        <AdminCard name="Generation" iconName="user"></AdminCard>
+      </div>
     </div>
   );
 };

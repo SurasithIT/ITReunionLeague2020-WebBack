@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function AdminCard(props) {
   return (
-    <div className="col-4">
+    <div>
       <div className="content my-4 mx-2">
         <div className="container-fluid ">
           <div className="row">

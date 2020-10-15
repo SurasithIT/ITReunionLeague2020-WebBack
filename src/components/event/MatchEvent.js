@@ -39,7 +39,7 @@ const MatchEvent = (props) => {
           setValue={setStatus}
         />
       </div>
-      <div className="col-2">
+      <div className="col-3">
         <EventStatusDropdown
           id="status"
           label="Status :"
@@ -47,13 +47,16 @@ const MatchEvent = (props) => {
           setValue={setStatus}
         />
       </div>
-      <div className="col-2">
-        <EventStatusDropdown
-          id="status"
-          label="Status :"
-          value={status}
-          setValue={setStatus}
-        />
+
+      <div className="col-1">
+        <button
+          className="btn btn-danger my-4"
+          onClick={() => {
+            props.remove(props.id);
+          }}
+        >
+          <i className="fas fa-window-close" />
+        </button>
       </div>
     </div>
   );
