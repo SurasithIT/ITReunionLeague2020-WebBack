@@ -1,15 +1,15 @@
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 
-const TeamDropdown = (props) => {
+const StadiumDropdown = (props) => {
   const [list, setList] = useState([{ id: "", name: "--- กรุณาเลือก ---" }]);
   const getDropdownData = () => {
     axios
-      .get("https://itreuionapi.herokuapp.com/team/all")
+      .get("https://itreuionapi.herokuapp.com/match/stadium/all")
       .then((res) => {
         console.log(res);
         if (res.status === 200 && res.data) {
-          setList(list.concat(res.data.teams));
+          setList(list.concat(res.data.stadium));
         } else {
           console.log(res);
         }
@@ -49,4 +49,4 @@ const TeamDropdown = (props) => {
   );
 };
 
-export default TeamDropdown;
+export default StadiumDropdown;

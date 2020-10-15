@@ -3,7 +3,7 @@ import axios from "axios";
 
 const GenerationDropdown = (props) => {
   const [list, setList] = useState([{ id: "", number: "--- กรุณาเลือก ---" }]);
-  const getDropdownTeam = () => {
+  const getDropdownData = () => {
     axios
       .get("https://itreuionapi.herokuapp.com/team/generation/all")
       .then((res) => {
@@ -21,7 +21,7 @@ const GenerationDropdown = (props) => {
   };
 
   useEffect(() => {
-    getDropdownTeam();
+    getDropdownData();
   }, []);
 
   return (

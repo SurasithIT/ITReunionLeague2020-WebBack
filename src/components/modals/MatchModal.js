@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TeamDropdown from "../dropdown/TeamDropdown";
+import MatchEvent from "../event/MatchEvent";
+import StadiumDropdown from "../dropdown/StadiumDropdown";
 
 const MatchModal = (props) => {
   const [id, setId] = useState(0);
   const [title, setTitle] = useState("");
   const [kickOffTime, setKickOffTime] = useState(new Date());
-  const [stadiumNumber, setStadiumNumber] = useState(0);
+  const [stadiumId, setStadiumId] = useState(0);
   const [homeTeam, setHomeTeam] = useState(0);
   const [awayTeam, setAwayTeam] = useState(0);
   const [homeScores, setHomeScores] = useState(0);
   const [awayScores, setAwayScores] = useState(0);
   const [refereeTeam, setRefereeTeam] = useState(0);
-  const [stadiumList, setStadiumList] = useState([
-    { id: 0, value: 0 },
-    { id: 1, value: 1 },
-    { id: 2, value: 2 },
-  ]);
   const [teadmDropdown, setTeadmDropdown] = useState([]);
   const getDropdownTeam = () => {
     axios
@@ -34,19 +31,16 @@ const MatchModal = (props) => {
   };
 
   useEffect(() => {
-    getDropdownTeam();
-    console.log("Match Modal call");
     if (id !== props.id) {
       if (props.id === -1) {
         setTitle("Add");
         setKickOffTime(new Date());
-        setStadiumNumber(1);
         setHomeScores(0);
         setAwayScores(0);
       } else {
         setTitle("Edit");
         setKickOffTime(props.data.Kickoff);
-        setStadiumNumber(props.data.StadiumNumber);
+        setStadiumId(props.data.StadiumId);
         setHomeTeam(props.data.HomeTeam);
         setAwayTeam(props.data.AwayTeam);
         setHomeScores(+props.data.HomeScores);
@@ -64,7 +58,7 @@ const MatchModal = (props) => {
         Kickoff: kickOffTime,
         HomeScores: homeScores,
         AwayScores: awayScores,
-        StadiumId: stadiumList,
+        StadiumId: stadiumId,
         HomeTeamId: homeTeam,
         AwayTeamId: awayTeam,
         RefereeTeamId: refereeTeam,
@@ -171,24 +165,12 @@ const MatchModal = (props) => {
                       </div>
 
                       <div className="col-3">
-                        <label htmlFor="stadiumNumber">Stadium :</label>
-                        <select
-                          className="form-control"
-                          id="stadiumNumber"
-                          required
-                          value={stadiumNumber}
-                          onChange={(event) => {
-                            setStadiumNumber(event.target.value);
-                          }}
-                        >
-                          {stadiumList.map((val) => {
-                            return (
-                              <option key={val.id} value={val.id}>
-                                {val.value}
-                              </option>
-                            );
-                          })}
-                        </select>
+                        <StadiumDropdown
+                          id="stadiumId"
+                          label="Stadium :"
+                          value={stadiumId || ""}
+                          setValue={setStadiumId}
+                        />
                       </div>
 
                       <div className="col-6">
@@ -267,6 +249,7 @@ const MatchModal = (props) => {
                       </div>
 
                       <div className="col-4">
+                         
                         {/* <label htmlFor="awayTeam">Away Team :</label>
                         <input
                           type="text"
@@ -289,7 +272,9 @@ const MatchModal = (props) => {
                   </div>
                 </div>
                 <hr />
-                <div className="match-event">Match event</div>
+                <div className="match-event">
+                  <MatchEvent homeTeam={homeTeam} awayTeam={awayTeam} />
+                </div>
               </div>
               <div className="modal-footer">
                 <button

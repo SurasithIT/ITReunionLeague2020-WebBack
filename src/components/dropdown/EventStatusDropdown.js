@@ -1,15 +1,15 @@
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 
-const TeamDropdown = (props) => {
-  const [list, setList] = useState([{ id: "", name: "--- กรุณาเลือก ---" }]);
-  const getDropdownData = () => {
+const EventStatusDropdown = (props) => {
+  const [list, setList] = useState([{ id: "", nameEn: "-- กรุณาเลือก --" }]);
+  const getDropdownStatus = () => {
     axios
-      .get("https://itreuionapi.herokuapp.com/team/all")
+      .get("https://itreuionapi.herokuapp.com/matchevent/status/all")
       .then((res) => {
         console.log(res);
         if (res.status === 200 && res.data) {
-          setList(list.concat(res.data.teams));
+          setList(list.concat(res.data.status));
         } else {
           console.log(res);
         }
@@ -21,7 +21,7 @@ const TeamDropdown = (props) => {
   };
 
   useEffect(() => {
-    getDropdownData();
+    getDropdownStatus();
   }, []);
 
   return (
@@ -40,7 +40,7 @@ const TeamDropdown = (props) => {
           list.map((val) => {
             return (
               <option key={val.id} value={val.id}>
-                {val.name}
+                {val.nameEn}
               </option>
             );
           })}
@@ -49,4 +49,4 @@ const TeamDropdown = (props) => {
   );
 };
 
-export default TeamDropdown;
+export default EventStatusDropdown;

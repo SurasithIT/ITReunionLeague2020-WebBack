@@ -1,7 +1,6 @@
-import React, { Fragment, useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
-const TeamDropdown = (props) => {
+const TeamEventDropdown = () => {
   const [list, setList] = useState([{ id: "", name: "--- กรุณาเลือก ---" }]);
   const getDropdownData = () => {
     axios
@@ -49,4 +48,4 @@ const TeamDropdown = (props) => {
   );
 };
 
-export default TeamDropdown;
+export default TeamEventDropdown;
