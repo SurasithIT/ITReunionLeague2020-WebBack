@@ -3,6 +3,7 @@ import axios from "axios";
 import TeamDropdown from "../dropdown/TeamDropdown";
 import MatchEvent from "../event/MatchEvent";
 import StadiumDropdown from "../dropdown/StadiumDropdown";
+import { event } from "jquery";
 
 const MatchModal = (props) => {
   const [id, setId] = useState(0);
@@ -14,20 +15,18 @@ const MatchModal = (props) => {
   const [homeScores, setHomeScores] = useState(0);
   const [awayScores, setAwayScores] = useState(0);
   const [refereeTeam, setRefereeTeam] = useState(0);
-  const [teadmDropdown, setTeadmDropdown] = useState([]);
-  const getDropdownTeam = () => {
-    axios
-      .get("https://itreuionapi.herokuapp.com/team/all")
-      .then((res) => {
-        console.log(res);
-        if (res.data) {
-          setTeadmDropdown(res.data.teams);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        throw err;
-      });
+  const [events, setEvents] = useState([]);
+  const [click, setClick] = useState(0);
+
+  const addEvent = () => {
+    setEvents([
+      ...events,
+      <MatchEvent key={click} id={click} remove={removeEvent} />,
+    ]);
+    setClick(click + 1);
+  };
+  const removeEvent = (id) => {
+    setEvents(events.filter((item) => item.id !== id));
   };
 
   useEffect(() => {
@@ -80,25 +79,6 @@ const MatchModal = (props) => {
         })
         .catch((err) => console.log(err));
     }
-    // else{
-    //   const team = {
-    //     name: generation
-    //   }
-    //   const token = localStorage.getItem('token')
-    //   axios.patch('https://itreuionapi.herokuapp.com/team/' + idteam , team, {
-    //     headers: {
-    //       Authorization: token}
-    //   })
-    //   .then(res => {
-    //     if (res.status === 200) {
-
-    //     } else {
-    //       console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-    //       //Show Dialog box หรือ Modal แจ้ง Error
-    //     }
-    //   })
-    //   .catch((err) => console.log(err))
-    // }
   };
 
   return (
@@ -174,24 +154,6 @@ const MatchModal = (props) => {
                       </div>
 
                       <div className="col-6">
-                        {/* <label htmlFor="refereeTeam">Referee Team :</label>
-                        <select
-                          className="form-control"
-                          id="refereeTeam"
-                          required
-                          value={refereeTeam}
-                          onChange={(event) => {
-                            setRefereeTeam(event.target.value);
-                          }}
-                        >
-                          {teadmDropdown.map((val) => {
-                            return (
-                              <option key={val.id} value={val.id}>
-                                {val.name}
-                              </option>
-                            );
-                          })}
-                        </select> */}
                         <TeamDropdown
                           id="refTeam"
                           label="Referee Team :"
@@ -201,17 +163,6 @@ const MatchModal = (props) => {
                       </div>
 
                       <div className="col-4">
-                        {/* <label htmlFor="homeTeam">Home Team :</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="homeTeam"
-                          required
-                          value={homeTeam}
-                          onChange={(event) => {
-                            setHomeTeam(event.target.value);
-                          }}
-                        /> */}
                         <TeamDropdown
                           id="homeTeam"
                           label="Home Team :"
@@ -249,18 +200,6 @@ const MatchModal = (props) => {
                       </div>
 
                       <div className="col-4">
-                         
-                        {/* <label htmlFor="awayTeam">Away Team :</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="awayTeam"
-                          required
-                          value={awayTeam}
-                          onChange={(event) => {
-                            setAwayTeam(event.target.value);
-                          }}
-                        /> */}
                         <TeamDropdown
                           id="awayTeam"
                           label="Away Team :"
@@ -272,10 +211,19 @@ const MatchModal = (props) => {
                   </div>
                 </div>
                 <hr />
-                <div className="match-event">
-                  <MatchEvent homeTeam={homeTeam} awayTeam={awayTeam} />
+                <div className="match-event">{events}</div>
+                <div className="plus-match-event">
+                  <button
+                    className="btn btn-primary float-sm-right"
+                    onClick={() => {
+                      addEvent();
+                    }}
+                  >
+                    <i className="fas fa-plus-square" />
+                  </button>
                 </div>
               </div>
+
               <div className="modal-footer">
                 <button
                   type="button"
