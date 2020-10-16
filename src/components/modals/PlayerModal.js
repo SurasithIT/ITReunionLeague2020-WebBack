@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import GenerationDropdown from "../dropdown/GenerationDropdown";
 import { trackPromise } from "react-promise-tracker";
+import $ from "jquery";
 
 const PlayerModal = (props) => {
   const [id, setId] = useState(0);
@@ -11,10 +12,9 @@ const PlayerModal = (props) => {
   const [lastNameTh, setLastNameTh] = useState("");
   const [firstNameEn, setFirstNameEn] = useState("");
   const [lastNameEn, setLastNameEn] = useState("");
-  const [generation, setGeneration] = useState(0);
+  const [generationId, setGenerationId] = useState(0);
   const [number, setNumber] = useState("");
   const [scores, setScores] = useState(0);
-
   useEffect(() => {
     if (id !== props.id) {
       if (props.id === -1) {
@@ -23,7 +23,7 @@ const PlayerModal = (props) => {
         setLastNameTh("");
         setFirstNameEn("");
         setLastNameEn("");
-        setGeneration("");
+        setGenerationId("");
         setNumber("");
         setScores(0);
       } else {
@@ -33,9 +33,9 @@ const PlayerModal = (props) => {
         setLastNameTh(props.data.LastNameTh);
         setFirstNameEn(props.data.FirstNameEn);
         setLastNameEn(props.data.LastNameEn);
-        setGeneration(props.data.Generation);
+        setGenerationId(props.data.Generation);
         setNumber(props.data.Number);
-        setScores(0);
+        setScores(props.data.Scores);
         setIdplayer(props.data.id);
       }
       setId(props.id);
@@ -52,7 +52,7 @@ const PlayerModal = (props) => {
         LastNameEn: lastNameEn,
         Number: number,
         Scores: scores,
-        Generation: generation,
+        GenerationId: generationId,
       };
       const token = localStorage.getItem("token");
       trackPromise(
@@ -79,9 +79,11 @@ const PlayerModal = (props) => {
         FirstNameEn: firstNameEn,
         LastNameEn: lastNameEn,
         Number: number,
-        Scores: scores,
-        Generation: generation,
+        Scores: +scores,
+        GenerationId: +generationId,
       };
+      console.log("player param");
+      console.log(player);
       const token = localStorage.getItem("token");
       trackPromise(
         axios
@@ -96,6 +98,7 @@ const PlayerModal = (props) => {
           )
           .then((res) => {
             if (res.status === 200) {
+              $("[data-dismiss=modal]").trigger({ type: "click" });
             } else {
               console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
               //Show Dialog box หรือ Modal แจ้ง Error
@@ -195,8 +198,8 @@ const PlayerModal = (props) => {
                       <GenerationDropdown
                         id="generation"
                         label="Generation :"
-                        value={generation || ""}
-                        setValue={setGeneration}
+                        value={generationId || ""}
+                        setValue={setGenerationId}
                       />
                       {/* <label htmlFor="generation">Generation :</label>
                       <select

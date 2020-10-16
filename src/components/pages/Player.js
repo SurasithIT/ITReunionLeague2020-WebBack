@@ -60,9 +60,9 @@ const Player = () => {
         <td>{props.renderplayer.LastNameTh}</td>
         <td>{props.renderplayer.FirstNameEn}</td>
         <td>{props.renderplayer.LastNameEn}</td>
-        <td>{props.renderplayer.Generation}</td>
+        <td>{props.renderplayer.generationId}</td>
         <td>{props.renderplayer.Number}</td>
-        <td>0</td>
+        <td>{props.renderplayer.Scores}</td>
         <td>
           <button
             type="button"
