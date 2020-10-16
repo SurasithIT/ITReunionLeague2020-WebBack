@@ -4,6 +4,7 @@ import TeamDropdown from "../dropdown/TeamDropdown";
 import MatchEvent from "../event/MatchEvent";
 import StadiumDropdown from "../dropdown/StadiumDropdown";
 import { event } from "jquery";
+import moment from 'moment'
 
 const MatchModal = (props) => {
   const [id, setId] = useState(0);
@@ -18,11 +19,15 @@ const MatchModal = (props) => {
   const [events, setEvents] = useState([]);
   const [click, setClick] = useState(0);
 
+
+  const renderMatchEvent = () => {
+    return events.map(matchEvent => {
+      return <MatchEvent  id={matchEvent.id} data={matchEvent} filterTeam={[props.data.HomeTeam, props.data.AwayTeam]} remove={removeEvent} />
+    })
+  }
+
   const addEvent = () => {
-    setEvents([
-      ...events,
-      <MatchEvent key={click} id={click} remove={removeEvent} />,
-    ]);
+    
     setClick(click + 1);
   };
   const removeEvent = (id) => {
@@ -40,15 +45,16 @@ const MatchModal = (props) => {
         setTitle("Edit");
         setKickOffTime(props.data.Kickoff);
         setStadiumId(props.data.StadiumId);
-        setHomeTeam(props.data.HomeTeam);
-        setAwayTeam(props.data.AwayTeam);
+        setHomeTeam(props.data.HomeTeamId);
+        setAwayTeam(props.data.AwayTeamId);
         setHomeScores(+props.data.HomeScores);
         setAwayScores(+props.data.AwayScores);
-        setRefereeTeam(props.data.RefereeTeam);
+        setRefereeTeam(props.data.RefereeTeamId);
+        setEvents(props.data.MatchEvents)
       }
       setId(props.id);
     }
-    return () => {};
+    return () => { };
   }, [id, props]);
 
   const hanDleSubmit = () => {
@@ -119,13 +125,14 @@ const MatchModal = (props) => {
                           id="kickOffTime"
                           required
                           value={
-                            new Date(
-                              Date.parse(kickOffTime)
-                            ).toLocaleTimeString("th-TH", {
-                              hour12: false,
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }) || "07:00"
+                            moment.utc(kickOffTime).format('hh:mm')
+                            // new Date(
+                            //   Date.parse(kickOffTime)
+                            // ).toLocaleTimeString("th-TH", {
+                            //   hour12: false,
+                            //   hour: "2-digit",
+                            //   minute: "2-digit",
+                            // }) || "07:00"
                           }
                           onChange={(event) => {
                             console.log(event);
@@ -211,7 +218,9 @@ const MatchModal = (props) => {
                   </div>
                 </div>
                 <hr />
-                <div className="match-event">{events}</div>
+                <div className="match-event">
+                          {renderMatchEvent()}
+                </div>
                 <div className="plus-match-event">
                   <button
                     className="btn btn-primary float-sm-right"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MatchModal from "../modals/MatchModal";
+import moment from "moment"
 
 const MatchData = () => {
   const [MatchsData, setMatchsData] = useState([]);
@@ -10,9 +11,11 @@ const MatchData = () => {
   const fetchMatch = () => {
     const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
     const URL = "https://itreuionapi.herokuapp.com/match";
+    //const testURL = "http://localhost:3000/match";
     axios({
       method: "get",
       url: PROXY_URL + URL,
+      //url: testURL,
       data: {
         KEY: "VALUE",
       },
@@ -49,16 +52,17 @@ const MatchData = () => {
   };
 
   const RenderMatch = (props) => {
+    const convert_time = moment.utc(props.rendermatch.Kickoff).format('LT');
     return (
       <tr>
-        <td>{props.rendermatch.Kickoff}</td>
+        <td>{convert_time}</td>
         <td>{props.rendermatch.StadiumId}</td>
-        <td>{props.rendermatch.HomeTeamId}</td>
+        <td>{props.rendermatch.HomeTeam.name}</td>
         <td>{props.rendermatch.HomeScores}</td>
         <td>-</td>
         <td>{props.rendermatch.AwayScores}</td>
-        <td>{props.rendermatch.AwayTeamId}</td>
-        <td>{props.rendermatch.RefereeTeamId}</td>
+        <td>{props.rendermatch.AwayTeam.name}</td>
+        <td>{props.rendermatch.RefereeTeam.name}</td>
         <td>
           <button
             type="button"

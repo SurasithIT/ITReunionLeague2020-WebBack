@@ -32,7 +32,7 @@ const PlayerModal = (props) => {
         setLastNameTh(props.data.LastNameTh);
         setFirstNameEn(props.data.FirstNameEn);
         setLastNameEn(props.data.LastNameEn);
-        setGeneration(props.data.Generation);
+        setGeneration(props.data.generationId);
         setNumber(props.data.Number);
         setScores(0);
         setIdplayer(props.data.id);

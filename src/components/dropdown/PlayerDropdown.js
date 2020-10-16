@@ -7,6 +7,7 @@ const PlayerDropdown = (props) => {
     { id: -1, name: "นักเตะยืมตัว" },
   ]);
   const getDropdownData = () => {
+    console.log("props.team =>", props.team);
     axios
       .get("https://itreuionapi.herokuapp.com/team/" + props.team)
       .then((res) => {
@@ -33,7 +34,7 @@ const PlayerDropdown = (props) => {
 
   useEffect(() => {
     getDropdownData();
-  }, []);
+  }, [props.team]);
 
   return (
     <Fragment>

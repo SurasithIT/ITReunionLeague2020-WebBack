@@ -4,15 +4,62 @@ import PlayerDropdown from "../dropdown/PlayerDropdown";
 import TeamDropdown from "../dropdown/TeamDropdown";
 
 const MatchEvent = (props) => {
-  const [minutes, setMinutes] = useState(0);
-  const [team, setTeam] = useState("");
-  const [player, setPlayer] = useState("");
-  const [status, setStatus] = useState("");
+
+  const [eventStatus, setEventStatus] = useState({
+    id: 0,
+    Minutes: 0,
+    playerId: "",
+    matchId: "",
+    teamId: "",
+    EventStatusId: ""
+  })
+
+  const setTeam =(value)=>{
+    setEventStatus(prev=>{
+      return ({
+        ...prev,
+        teamId:value
+      })
+    })
+  }
+  const setPlayer=(value)=>{
+    setEventStatus(prev=>{
+      return ({
+        ...prev,
+        playerId:value
+      })
+    })
+  }
+  const setEventState=(value)=>{
+    setEventStatus(prev=>{
+      return ({
+        ...prev,
+        EventStatusId:value
+      })
+    })
+  }
+  const setMinutes=(value)=>{
+    setEventStatus(prev=>{
+      return ({
+        ...prev,
+        Minutes:value
+      })
+    })
+  }
+
+  
+  // const { id, Minutes, playerId, matchId, teamId, EventStatusId} = props.data
+  // const [minutes, setMinutes] = useState(0);
+  // const [team, setTeam] = useState("");
+  // const [player, setPlayer] = useState("");
+  // const [status, setStatus] = useState("");
+
 
   useEffect(() => {
-    setPlayer(player);
-    setTeam(team);
-    return () => {};
+    
+    setEventStatus(props.data)
+    
+    //return () => {};
   }, []);
 
   return (
@@ -24,7 +71,7 @@ const MatchEvent = (props) => {
           className="form-control"
           id="minutes"
           required
-          value={minutes}
+          value={eventStatus.Minutes}
           onChange={(event) => {
             setMinutes(event.target.value);
           }}
@@ -34,7 +81,8 @@ const MatchEvent = (props) => {
         <TeamDropdown
           id="team"
           label="Team :"
-          value={team || ""}
+          teams={props.filterTeam}
+          value={eventStatus.teamId || ""}
           setValue={setTeam}
         />
       </div>
@@ -42,8 +90,8 @@ const MatchEvent = (props) => {
         <PlayerDropdown
           id="player"
           label="Player :"
-          team={team}
-          value={player}
+          team={eventStatus.teamId}
+          value={eventStatus.playerId}
           setValue={setPlayer}
         />
       </div>
@@ -51,8 +99,8 @@ const MatchEvent = (props) => {
         <EventStatusDropdown
           id="status"
           label="Status :"
-          value={status}
-          setValue={setStatus}
+          value={eventStatus.EventStatusId}
+          setValue={setEventState}
         />
       </div>
 

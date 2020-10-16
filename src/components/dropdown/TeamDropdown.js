@@ -2,27 +2,32 @@ import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 
 const TeamDropdown = (props) => {
-  const [list, setList] = useState([{ id: "", name: "--- กรุณาเลือก ---" }]);
+  const [list, setList] = useState([{ id: 0, name: "--- กรุณาเลือก ---" }]);
   const getDropdownData = () => {
-    axios
-      .get("https://itreuionapi.herokuapp.com/team/all")
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200 && res.data) {
-          setList(list.concat(res.data.teams));
-        } else {
+    //if send value from MatchEvent Modal will True
+    if (props.teams) {
+      setList(list.concat(props.teams));
+    } else {
+      axios
+        .get("https://itreuionapi.herokuapp.com/team/all")
+        .then((res) => {
           console.log(res);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        throw err;
-      });
+          if (res.status === 200 && res.data) {
+            setList(list.concat(res.data.teams));
+          } else {
+            console.log(res);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          throw err;
+        });
+    }
   };
 
   useEffect(() => {
     getDropdownData();
-  }, []);
+  }, [props.teams]);
 
   return (
     <Fragment>
