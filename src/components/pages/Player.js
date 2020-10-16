@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PlayerModal from "../modals/PlayerModal";
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import * as _ from "lodash";
 
 const Player = () => {
   const [playersData, setPlayersData] = useState([]);
@@ -20,8 +21,9 @@ const Player = () => {
         },
       })
         .then((res) => {
-          console.log(res.data.player);
+          // console.log(res.data.player);
           setPlayersData(res.data.player);
+          // console.log(player.FirstNameEn)
         })
         .catch((err) => console.log(err))
     );
@@ -62,7 +64,7 @@ const Player = () => {
         <td>{props.renderplayer.LastNameEn}</td>
         <td>{props.renderplayer.generationId}</td>
         <td>{props.renderplayer.Number}</td>
-        <td>{props.renderplayer.Scores}</td>
+        <td>0</td>
         <td>
           <button
             type="button"
@@ -91,6 +93,7 @@ const Player = () => {
   };
 
   const playerlist = () => {
+
     return playersData.map((renderplayer) => {
       return <RenderPlayer renderplayer={renderplayer} key={renderplayer.id} />;
     });
