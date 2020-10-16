@@ -80,11 +80,7 @@ const PlayerModal = (props) => {
         LastNameEn: lastNameEn,
         Number: number,
         Scores: +scores,
-<<<<<<< Updated upstream
         generationId: generationId,
-=======
-        generationId: +generationId,
->>>>>>> Stashed changes
       };
       console.log("player param");
       console.log(player);
