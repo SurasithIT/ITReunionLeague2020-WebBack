@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TeamModal from "../modals/TeamModal";
 import axios from "axios";
+import { trackPromise } from "react-promise-tracker";
 
 const TeamData = () => {
   const [DataTeam, setDataTeam] = useState([]);
@@ -9,17 +10,20 @@ const TeamData = () => {
 
   const fetchTeam = () => {
     const URL = "https://itreuionapi.herokuapp.com/team/all";
-    axios({
-      method: "get",
-      url: URL,
-      data: {
-        KEY: "VALUE",
-      },
-    })
-      .then((res) => {
-        setDataTeam(res.data.teams);
+    trackPromise(
+      axios({
+        method: "get",
+        url: URL,
+        data: {
+          KEY: "VALUE",
+        },
       })
-      .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res.data.teams);
+          setDataTeam(res.data.teams);
+        })
+        .catch((err) => console.log(err))
+    );
   };
 
   useEffect(() => {
@@ -29,36 +33,37 @@ const TeamData = () => {
 
   const handleDelete = (idteam) => {
     const token = localStorage.getItem("token");
-    axios
-      .delete("https://itreuionapi.herokuapp.com/team/" + idteam, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          fetchTeam();
-        } else {
-          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-          //Show Dialog box หรือ Modal แจ้ง Error
-        }
-      })
-      .catch((err) => console.log(err));
+    trackPromise(
+      axios
+        .delete("https://itreuionapi.herokuapp.com/team/" + idteam, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            fetchTeam();
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
+          }
+        })
+        .catch((err) => console.log(err))
+    );
   };
 
   const RenderTeam = (props) => {
     return (
       <tr>
         <td>{props.renderteam.name}</td>
-        <td>16</td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
+        <td>{props.renderteam.Played}</td>
+        <td>{props.renderteam.Won}</td>
+        <td>{props.renderteam.Drawn}</td>
+        <td>{props.renderteam.Lost}</td>
+        <td>{props.renderteam.GoalAgainst}</td>
+        <td>{props.renderteam.GoalDifference}</td>
+        <td>{props.renderteam.GoalFor}</td>
+        <td>{props.renderteam.Points}</td>
         <td>
           <button
             type="button"
@@ -135,8 +140,7 @@ const TeamData = () => {
                     <table className="table table-hover table-striped text-center table-fixed table-shadow">
                       <thead className="thead-dark">
                         <tr>
-                          <th width="5%">Team</th>
-                          <th width="20%">Generation</th>
+                          <th width="30%">Team</th>
                           <th width="5%">Played</th>
                           <th width="5%">Won</th>
                           <th width="5%">Drawn</th>
@@ -144,8 +148,8 @@ const TeamData = () => {
                           <th width="5%">GF</th>
                           <th width="5%">GA</th>
                           <th width="5%">GD</th>
-                          <th width="10%">Points</th>
-                          <th width="20%"></th>
+                          <th width="5%">Points</th>
+                          <th width="30%"></th>
                         </tr>
                       </thead>
                       <tbody>{Teamlist()}</tbody>

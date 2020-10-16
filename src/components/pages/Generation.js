@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import GenerationModal from "../modals/GenerationModal";
+import { trackPromise } from "react-promise-tracker";
 
 const Generation = () => {
   const [generaionData, setGenerationData] = useState([]);
@@ -10,19 +11,21 @@ const Generation = () => {
   const fetchMatch = () => {
     const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
     const URL = "https://itreuionapi.herokuapp.com/team/generation/all";
-    axios({
-      method: "get",
-      url: PROXY_URL + URL,
-      data: {
-        KEY: "VALUE",
-      },
-    })
-      .then((res) => {
-        console.log(res.data.generation);
-        setGenerationData(res.data.generation);
-        // console.log(generaionData)
+    trackPromise(
+      axios({
+        method: "get",
+        url: PROXY_URL + URL,
+        data: {
+          KEY: "VALUE",
+        },
       })
-      .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res.data.generation);
+          setGenerationData(res.data.generation);
+          // console.log(generaionData)
+        })
+        .catch((err) => console.log(err))
+    );
   };
 
   useEffect(() => {
@@ -32,21 +35,23 @@ const Generation = () => {
 
   const handleDelete = (idgen) => {
     const token = localStorage.getItem("token");
-    axios
-      .delete("https://itreuionapi.herokuapp.com/match/" + idgen, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          fetchMatch();
-        } else {
-          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-          //Show Dialog box หรือ Modal แจ้ง Error
-        }
-      })
-      .catch((err) => console.log(err));
+    trackPromise(
+      axios
+        .delete("https://itreuionapi.herokuapp.com/match/" + idgen, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            fetchMatch();
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
+          }
+        })
+        .catch((err) => console.log(err))
+    );
   };
 
   const RenderGeneration = (props) => {

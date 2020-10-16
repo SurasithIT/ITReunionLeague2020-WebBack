@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Alert } from "react-alert";
 import { Redirect } from "react-router-dom";
+import { trackPromise } from "react-promise-tracker";
 
 const TeamModal = (props) => {
   const [id, setId] = useState(0);
@@ -65,40 +66,44 @@ const TeamModal = (props) => {
         name: generation,
       };
       const token = localStorage.getItem("token");
-      axios
-        .post("https://itreuionapi.herokuapp.com/team", team, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res.status);
-          } else {
-            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-            //Show Dialog box หรือ Modal แจ้ง Error
-          }
-        })
-        .catch((err) => console.log(err));
+      trackPromise(
+        axios
+          .post("https://itreuionapi.herokuapp.com/team", team, {
+            headers: {
+              Authorization: token,
+            },
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res.status);
+            } else {
+              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+              //Show Dialog box หรือ Modal แจ้ง Error
+            }
+          })
+          .catch((err) => console.log(err))
+      );
     } else {
       const team = {
         name: generation,
       };
       const token = localStorage.getItem("token");
-      axios
-        .patch("https://itreuionapi.herokuapp.com/team/" + idteam, team, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-          } else {
-            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-            //Show Dialog box หรือ Modal แจ้ง Error
-          }
-        })
-        .catch((err) => console.log(err));
+      trackPromise(
+        axios
+          .patch("https://itreuionapi.herokuapp.com/team/" + idteam, team, {
+            headers: {
+              Authorization: token,
+            },
+          })
+          .then((res) => {
+            if (res.status === 200) {
+            } else {
+              console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+              //Show Dialog box หรือ Modal แจ้ง Error
+            }
+          })
+          .catch((err) => console.log(err))
+      );
     }
   };
   return (
@@ -137,17 +142,12 @@ const TeamModal = (props) => {
                         className="form-control"
                         id="generation"
                         required
+                        readOnly
                         value={generation}
                         onChange={(event) => {
                           setGeneration(event.target.value);
                         }}
                       ></input>
-                      {/* <select className="form-control" id="sel1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                      </select> */}
                     </div>
 
                     <div className="col-4">

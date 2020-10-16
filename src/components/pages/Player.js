@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PlayerModal from "../modals/PlayerModal";
 import axios from "axios";
+import { trackPromise } from "react-promise-tracker";
 
 const Player = () => {
   const [playersData, setPlayersData] = useState([]);
@@ -10,18 +11,20 @@ const Player = () => {
   const fetchPlayer = () => {
     const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
     const URL = "https://itreuionapi.herokuapp.com/player";
-    axios({
-      method: "get",
-      url: PROXY_URL + URL,
-      data: {
-        KEY: "VALUE",
-      },
-    })
-      .then((res) => {
-        console.log(res.data.player);
-        setPlayersData(res.data.player);
+    trackPromise(
+      axios({
+        method: "get",
+        url: PROXY_URL + URL,
+        data: {
+          KEY: "VALUE",
+        },
       })
-      .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res.data.player);
+          setPlayersData(res.data.player);
+        })
+        .catch((err) => console.log(err))
+    );
   };
 
   useEffect(() => {
@@ -31,21 +34,23 @@ const Player = () => {
 
   const handleDelete = (idplayer) => {
     const token = localStorage.getItem("token");
-    axios
-      .delete("https://itreuionapi.herokuapp.com/player/" + idplayer, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          fetchPlayer();
-        } else {
-          console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
-          //Show Dialog box หรือ Modal แจ้ง Error
-        }
-      })
-      .catch((err) => console.log(err));
+    trackPromise(
+      axios
+        .delete("https://itreuionapi.herokuapp.com/player/" + idplayer, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            fetchPlayer();
+          } else {
+            console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
+            //Show Dialog box หรือ Modal แจ้ง Error
+          }
+        })
+        .catch((err) => console.log(err))
+    );
   };
 
   const RenderPlayer = (props) => {
@@ -55,9 +60,9 @@ const Player = () => {
         <td>{props.renderplayer.LastNameTh}</td>
         <td>{props.renderplayer.FirstNameEn}</td>
         <td>{props.renderplayer.LastNameEn}</td>
-        <td>{props.renderplayer.Generation}</td>
+        <td>{props.renderplayer.generationId}</td>
         <td>{props.renderplayer.Number}</td>
-        <td>0</td>
+        <td>{props.renderplayer.Scores}</td>
         <td>
           <button
             type="button"
