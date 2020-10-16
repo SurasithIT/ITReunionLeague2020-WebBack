@@ -4,7 +4,7 @@ import TeamDropdown from "../dropdown/TeamDropdown";
 import MatchEvent from "../event/MatchEvent";
 import StadiumDropdown from "../dropdown/StadiumDropdown";
 import { event } from "jquery";
-import moment from 'moment'
+import moment from "moment";
 import { trackPromise } from "react-promise-tracker";
 
 const MatchModal = (props) => {
@@ -18,21 +18,44 @@ const MatchModal = (props) => {
   const [awayScores, setAwayScores] = useState(0);
   const [refereeTeam, setRefereeTeam] = useState(0);
   const [events, setEvents] = useState([]);
-  const [click, setClick] = useState(0);
 
+  const updateEvent = (index, event) => {
+    events[index] = event;
+    console.log(events);
+  };
 
   const renderMatchEvent = () => {
-    return events.map(matchEvent => {
-      return <MatchEvent  id={matchEvent.id} data={matchEvent} filterTeam={[props.data.HomeTeam, props.data.AwayTeam]} remove={removeEvent} />
-    })
-  }
+    return events.map((matchEvent, index) => {
+      matchEvent.index = index;
+      return (
+        <MatchEvent
+          key={index}
+          index={index}
+          id={matchEvent.id}
+          data={matchEvent}
+          filterTeam={[props.data.HomeTeam, props.data.AwayTeam]}
+          remove={removeEvent}
+          // setEvent={setEvents}
+          setEvent={updateEvent}
+        />
+      );
+    });
+  };
 
   const addEvent = () => {
-    
-    setClick(click + 1);
+    let newEvent = {
+      id: "",
+      Minutes: 0,
+      matchId: props.id,
+      playerId: "",
+      teamId: "",
+      EventStatusId: "",
+    };
+    setEvents([...events, newEvent]);
+    console.log("add");
   };
-  const removeEvent = (id) => {
-    setEvents(events.filter((item) => item.id !== id));
+  const removeEvent = (index) => {
+    setEvents(events.filter((item) => item.index !== index));
   };
 
   useEffect(() => {
@@ -51,11 +74,12 @@ const MatchModal = (props) => {
         setHomeScores(+props.data.HomeScores);
         setAwayScores(+props.data.AwayScores);
         setRefereeTeam(props.data.RefereeTeamId);
-        setEvents(props.data.MatchEvents)
+        setEvents(props.data.MatchEvents);
       }
+      console.log(props.data.MatchEvents);
       setId(props.id);
     }
-    return () => { };
+    return () => {};
   }, [id, props]);
 
   const hanDleSubmit = () => {
@@ -89,6 +113,13 @@ const MatchModal = (props) => {
       );
     }
   };
+
+  useEffect(() => {
+    events.map(event => {
+      
+    })
+    console.log(events);
+  }, [events]);
 
   return (
     <div>
@@ -128,7 +159,7 @@ const MatchModal = (props) => {
                           id="kickOffTime"
                           required
                           value={
-                            moment.utc(kickOffTime).format('hh:mm')
+                            moment.utc(kickOffTime).format("hh:mm")
                             // new Date(
                             //   Date.parse(kickOffTime)
                             // ).toLocaleTimeString("th-TH", {
@@ -221,9 +252,7 @@ const MatchModal = (props) => {
                   </div>
                 </div>
                 <hr />
-                <div className="match-event">
-                          {renderMatchEvent()}
-                </div>
+                <div className="match-event">{renderMatchEvent()}</div>
                 <div className="plus-match-event">
                   <button
                     className="btn btn-primary float-sm-right"

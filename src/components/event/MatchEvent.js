@@ -2,65 +2,67 @@ import React, { useEffect, useState } from "react";
 import EventStatusDropdown from "../dropdown/EventStatusDropdown";
 import PlayerDropdown from "../dropdown/PlayerDropdown";
 import TeamDropdown from "../dropdown/TeamDropdown";
+import TeamEventDropdown from "../dropdown/TeamEventDropdown";
 
 const MatchEvent = (props) => {
-
   const [eventStatus, setEventStatus] = useState({
     id: 0,
     Minutes: 0,
     playerId: "",
     matchId: "",
     teamId: "",
-    EventStatusId: ""
-  })
+    EventStatusId: "",
+  });
 
-  const setTeam =(value)=>{
-    setEventStatus(prev=>{
-      return ({
+  const setTeam = (value) => {
+    setEventStatus((prev) => {
+      return {
         ...prev,
-        teamId:value
-      })
-    })
-  }
-  const setPlayer=(value)=>{
-    setEventStatus(prev=>{
-      return ({
+        teamId: +value,
+      };
+    });
+  };
+  const setPlayer = (value) => {
+    setEventStatus((prev) => {
+      return {
         ...prev,
-        playerId:value
-      })
-    })
-  }
-  const setEventState=(value)=>{
-    setEventStatus(prev=>{
-      return ({
+        playerId: +value,
+      };
+    });
+  };
+  const setEventState = (value) => {
+    setEventStatus((prev) => {
+      return {
         ...prev,
-        EventStatusId:value
-      })
-    })
-  }
-  const setMinutes=(value)=>{
-    setEventStatus(prev=>{
-      return ({
+        EventStatusId: +value,
+      };
+    });
+  };
+  const setMinutes = (value) => {
+    setEventStatus((prev) => {
+      return {
         ...prev,
-        Minutes:value
-      })
-    })
-  }
+        Minutes: +value,
+      };
+    });
+  };
 
-  
   // const { id, Minutes, playerId, matchId, teamId, EventStatusId} = props.data
   // const [minutes, setMinutes] = useState(0);
   // const [team, setTeam] = useState("");
   // const [player, setPlayer] = useState("");
   // const [status, setStatus] = useState("");
 
-
   useEffect(() => {
-    
-    setEventStatus(props.data)
-    
+    setEventStatus(props.data);
+
     //return () => {};
   }, []);
+
+  useEffect(() => {
+    props.setEvent(props.index, eventStatus);
+    console.log(eventStatus);
+  }, [props.index, eventStatus]);
 
   return (
     <div className="row">
@@ -69,7 +71,7 @@ const MatchEvent = (props) => {
         <input
           type="number"
           className="form-control"
-          id="minutes"
+          id={"minutes-" + props.index}
           required
           value={eventStatus.Minutes}
           onChange={(event) => {
@@ -78,8 +80,9 @@ const MatchEvent = (props) => {
         />
       </div>
       <div className="col-3">
-        <TeamDropdown
-          id="team"
+        <TeamEventDropdown
+          index={props.index}
+          id={"team" + props.index}
           label="Team :"
           teams={props.filterTeam}
           value={eventStatus.teamId || ""}
@@ -88,16 +91,16 @@ const MatchEvent = (props) => {
       </div>
       <div className="col-3">
         <PlayerDropdown
-          id="player"
+          id={"player-" + props.index}
           label="Player :"
           teams={props.filterTeam}
-          value={eventStatus.playerId}
+          value={eventStatus.playerId || ""}
           setValue={setPlayer}
         />
       </div>
       <div className="col-3">
         <EventStatusDropdown
-          id="status"
+          id={"status-" + props.index}
           label="Status :"
           value={eventStatus.EventStatusId}
           setValue={setEventState}
@@ -108,7 +111,7 @@ const MatchEvent = (props) => {
         <button
           className="btn btn-danger my-4"
           onClick={() => {
-            props.remove(props.id);
+            props.remove(props.index);
           }}
         >
           <i className="fas fa-window-close" />
