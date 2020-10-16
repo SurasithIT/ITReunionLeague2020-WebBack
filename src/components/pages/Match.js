@@ -13,17 +13,18 @@ const MatchData = () => {
     const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
     const URL = "https://itreuionapi.herokuapp.com/match";
     //const testURL = "http://localhost:3000/match";
-    axios({
-      method: "get",
-      url: PROXY_URL + URL,
-      //url: testURL,
-      data: {
-        KEY: "VALUE",
-      },
-    })
-      .then((res) => {
-        setMatchsData(res.data.matchs);
-        console.log(res.data);
+    // axios({
+    //   method: "get",
+    //   url: PROXY_URL + URL,
+    //   //url: testURL,
+    //   data: {
+    //     KEY: "VALUE",
+    //   },
+    // })
+    //   .then((res) => {
+    //     setMatchsData(res.data.matchs);
+    //     console.log(res.data);
+    //   }
 
     trackPromise(
       axios({
@@ -39,7 +40,7 @@ const MatchData = () => {
         })
         .catch((err) => console.log(err))
     );
-  };
+  }
 
   useEffect(() => {
     fetchMatch();

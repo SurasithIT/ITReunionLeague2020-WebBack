@@ -90,7 +90,7 @@ const MatchEvent = (props) => {
         <PlayerDropdown
           id="player"
           label="Player :"
-          team={eventStatus.teamId}
+          teams={props.filterTeam}
           value={eventStatus.playerId}
           setValue={setPlayer}
         />

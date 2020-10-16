@@ -4,11 +4,8 @@ import TeamDropdown from "../dropdown/TeamDropdown";
 import MatchEvent from "../event/MatchEvent";
 import StadiumDropdown from "../dropdown/StadiumDropdown";
 import { event } from "jquery";
-<<<<<<< HEAD
 import moment from 'moment'
-=======
 import { trackPromise } from "react-promise-tracker";
->>>>>>> da881eef3cf946b2cf7521929ecde1e895f2c577
 
 const MatchModal = (props) => {
   const [id, setId] = useState(0);
