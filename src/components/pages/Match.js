@@ -24,6 +24,7 @@ const MatchData = () => {
       .then((res) => {
         setMatchsData(res.data.matchs);
         console.log(res.data);
+      })
 
     trackPromise(
       axios({

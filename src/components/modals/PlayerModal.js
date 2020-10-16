@@ -33,7 +33,7 @@ const PlayerModal = (props) => {
         setLastNameTh(props.data.LastNameTh);
         setFirstNameEn(props.data.FirstNameEn);
         setLastNameEn(props.data.LastNameEn);
-        setGeneration(props.data.generationId);
+        setGenerationId(props.data.generationId);
         setNumber(props.data.Number);
         setScores(props.data.Scores);
         setIdplayer(props.data.id);
@@ -52,7 +52,7 @@ const PlayerModal = (props) => {
         LastNameEn: lastNameEn,
         Number: number,
         Scores: scores,
-        GenerationId: generationId,
+        generationId: generationId,
       };
       const token = localStorage.getItem("token");
       trackPromise(
@@ -80,7 +80,7 @@ const PlayerModal = (props) => {
         LastNameEn: lastNameEn,
         Number: number,
         Scores: +scores,
-        GenerationId: +generationId,
+        generationId: generationId,
       };
       console.log("player param");
       console.log(player);
