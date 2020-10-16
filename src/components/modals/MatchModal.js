@@ -19,7 +19,6 @@ const MatchModal = (props) => {
   const [refereeTeam, setRefereeTeam] = useState(0);
   const [events, setEvents] = useState([]);
   const matchEventTeam = [props.data.HomeTeam, props.data.AwayTeam];
-  
 
   const updateEvent = (index, event) => {
     events[index] = event;
@@ -40,6 +39,7 @@ const MatchModal = (props) => {
           remove={removeEvent}
           // setEvent={setEvents}
           setEvent={updateEvent}
+          calScore={calScore}
         />
       );
     });
@@ -75,8 +75,8 @@ const MatchModal = (props) => {
         setStadiumId(props.data.StadiumId);
         setHomeTeam(props.data.HomeTeamId);
         setAwayTeam(props.data.AwayTeamId);
-        setHomeScores(+props.data.HomeScores);
-        setAwayScores(+props.data.AwayScores);
+        // setHomeScores(+props.data.HomeScores);
+        // setAwayScores(+props.data.AwayScores);
         setRefereeTeam(props.data.RefereeTeamId);
         setEvents(props.data.MatchEvents);
       }
@@ -118,7 +118,25 @@ const MatchModal = (props) => {
     }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   let _homeScore = events.filter((val) => {
+  //     return (
+  //       (val.teamId === props.data.HomeTeamId && val.EventStatusId === 1) ||
+  //       (val.teamId === props.data.AwayTeamId && val.EventStatusId === 2)
+  //     );
+  //   }).length;
+  //   let _awayScore = events.filter((val) => {
+  //     return (
+  //       (val.teamId === props.data.AwayTeamId && val.EventStatusId === 1) ||
+  //       (val.teamId === props.data.HomeTeamId && val.EventStatusId === 2)
+  //     );
+  //   }).length;
+
+  //   setHomeScores(_homeScore);
+  //   setAwayScores(_awayScore);
+  //   console.log(events);
+  // }, [events]);
+  const calScore = () => {
     let _homeScore = events.filter((val) => {
       return (
         (val.teamId === props.data.HomeTeamId && val.EventStatusId === 1) ||
@@ -135,7 +153,7 @@ const MatchModal = (props) => {
     setHomeScores(_homeScore);
     setAwayScores(_awayScore);
     console.log(events);
-  }, [events]);
+  };
 
   return (
     <div>

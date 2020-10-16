@@ -90,6 +90,7 @@ const MatchEvent = (props) => {
     console.log(eventStatus);
     let _players = players.filter((val) => val.teamId === eventStatus.teamId);
     setPlayersDropdown(_players);
+    props.calScore();
   }, [props.index, eventStatus]);
 
   return (
