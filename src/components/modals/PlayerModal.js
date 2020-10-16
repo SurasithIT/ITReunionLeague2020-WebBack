@@ -52,7 +52,7 @@ const PlayerModal = (props) => {
         LastNameEn: lastNameEn,
         Number: number,
         Scores: scores,
-        GenerationId: generationId,
+        generationId: generationId,
       };
       const token = localStorage.getItem("token");
       trackPromise(
@@ -64,7 +64,7 @@ const PlayerModal = (props) => {
           })
           .then((res) => {
             if (res.status === 200) {
-              console.log(res.status);
+              console.log(res.data.player);
             } else {
               console.log(`Error : {Status: ${res.status}, Msg: ${res.data}`);
               //Show Dialog box หรือ Modal แจ้ง Error
@@ -80,7 +80,7 @@ const PlayerModal = (props) => {
         LastNameEn: lastNameEn,
         Number: number,
         Scores: +scores,
-        GenerationId: +generationId,
+        generationId: generationId,
       };
       console.log("player param");
       console.log(player);
