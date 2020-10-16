@@ -18,6 +18,8 @@ const MatchModal = (props) => {
   const [awayScores, setAwayScores] = useState(0);
   const [refereeTeam, setRefereeTeam] = useState(0);
   const [events, setEvents] = useState([]);
+  const matchEventTeam = [props.data.HomeTeam, props.data.AwayTeam];
+  
 
   const updateEvent = (index, event) => {
     events[index] = event;
@@ -27,13 +29,14 @@ const MatchModal = (props) => {
   const renderMatchEvent = () => {
     return events.map((matchEvent, index) => {
       matchEvent.index = index;
+      console.log("matchEventTeam =>" + matchEventTeam);
       return (
         <MatchEvent
           key={index}
           index={index}
           id={matchEvent.id}
           data={matchEvent}
-          filterTeam={[props.data.HomeTeam, props.data.AwayTeam]}
+          filterTeam={matchEventTeam}
           remove={removeEvent}
           // setEvent={setEvents}
           setEvent={updateEvent}
@@ -54,6 +57,7 @@ const MatchModal = (props) => {
     setEvents([...events, newEvent]);
     console.log("add");
   };
+
   const removeEvent = (index) => {
     setEvents(events.filter((item) => item.index !== index));
   };
@@ -115,9 +119,21 @@ const MatchModal = (props) => {
   };
 
   useEffect(() => {
-    events.map(event => {
-      
-    })
+    let _homeScore = events.filter((val) => {
+      return (
+        (val.teamId === props.data.HomeTeamId && val.EventStatusId === 1) ||
+        (val.teamId === props.data.AwayTeamId && val.EventStatusId === 2)
+      );
+    }).length;
+    let _awayScore = events.filter((val) => {
+      return (
+        (val.teamId === props.data.AwayTeamId && val.EventStatusId === 1) ||
+        (val.teamId === props.data.HomeTeamId && val.EventStatusId === 2)
+      );
+    }).length;
+
+    setHomeScores(_homeScore);
+    setAwayScores(_awayScore);
     console.log(events);
   }, [events]);
 

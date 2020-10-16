@@ -3,6 +3,7 @@ import EventStatusDropdown from "../dropdown/EventStatusDropdown";
 import PlayerDropdown from "../dropdown/PlayerDropdown";
 import TeamDropdown from "../dropdown/TeamDropdown";
 import TeamEventDropdown from "../dropdown/TeamEventDropdown";
+import axios from "axios";
 
 const MatchEvent = (props) => {
   const [eventStatus, setEventStatus] = useState({
@@ -13,6 +14,29 @@ const MatchEvent = (props) => {
     teamId: "",
     EventStatusId: "",
   });
+  const [players, setPlayers] = useState([]);
+  const [playersDropdown, setPlayersDropdown] = useState([]);
+
+  const getPlayerDropdownData = () => {
+    // const playersUrl = "https://itreuionapi.herokuapp.com/team/"
+    const playersUrl = "https://itreuionapi.herokuapp.com/player/dropdown";
+    axios
+      .get(playersUrl)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200 && res.data) {
+          setPlayers(res.data);
+          console.log(res);
+        } else {
+          console.log(res);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      });
+    // }
+  };
 
   const setTeam = (value) => {
     setEventStatus((prev) => {
@@ -22,6 +46,7 @@ const MatchEvent = (props) => {
       };
     });
   };
+
   const setPlayer = (value) => {
     setEventStatus((prev) => {
       return {
@@ -55,6 +80,7 @@ const MatchEvent = (props) => {
 
   useEffect(() => {
     setEventStatus(props.data);
+    getPlayerDropdownData();
 
     //return () => {};
   }, []);
@@ -62,6 +88,8 @@ const MatchEvent = (props) => {
   useEffect(() => {
     props.setEvent(props.index, eventStatus);
     console.log(eventStatus);
+    let _players = players.filter((val) => val.teamId === eventStatus.teamId);
+    setPlayersDropdown(_players);
   }, [props.index, eventStatus]);
 
   return (
@@ -93,7 +121,8 @@ const MatchEvent = (props) => {
         <PlayerDropdown
           id={"player-" + props.index}
           label="Player :"
-          teams={props.filterTeam}
+          team={eventStatus.teamId}
+          players={playersDropdown}
           value={eventStatus.playerId || ""}
           setValue={setPlayer}
         />

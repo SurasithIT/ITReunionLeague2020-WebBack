@@ -23,7 +23,7 @@ const TeamDropdown = (props) => {
 
   useEffect(() => {
     getDropdownData();
-  }, [props.teams]);
+  }, []);
 
   return (
     <Fragment>
